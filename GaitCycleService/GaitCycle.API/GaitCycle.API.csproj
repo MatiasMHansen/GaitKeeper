@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Aspire\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
