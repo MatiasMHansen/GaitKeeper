@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.35806.103 d17.14
+VisualStudioVersion = 17.14.35806.103
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.AspireAppHost", "GaitKeeper.Aspire\GaitKeeper.AspireAppHost.csproj", "{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PyhtonC3DReader", "PyhtonC3DReader", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonC3DReader", "Python\PythonC3DReader\PythonC3DReader.pyproj", "{EF4108ED-9B30-4402-A929-34FF87C65F17}"
@@ -17,16 +15,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subject.API", "SubjectServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitCycle.API", "GaitCycleService\GaitCycle.API\GaitCycle.API.csproj", "{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.AppHost", "Aspire\GaitKeeper.AppHost\GaitKeeper.AppHost.csproj", "{D3F87795-8098-4D88-BE73-29D1EA442A6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.ServiceDefaults", "Aspire\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj", "{930561B7-6FA4-BD26-E173-B72A7415C24D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aspire", "Aspire", "{9F5A6713-CBF6-4A2A-8370-CE975E006B02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF4108ED-9B30-4402-A929-34FF87C65F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF4108ED-9B30-4402-A929-34FF87C65F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13AF559C-9DEE-055B-40F5-89F094710283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -37,6 +37,14 @@ Global
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F87795-8098-4D88-BE73-29D1EA442A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F87795-8098-4D88-BE73-29D1EA442A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F87795-8098-4D88-BE73-29D1EA442A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F87795-8098-4D88-BE73-29D1EA442A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930561B7-6FA4-BD26-E173-B72A7415C24D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930561B7-6FA4-BD26-E173-B72A7415C24D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930561B7-6FA4-BD26-E173-B72A7415C24D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930561B7-6FA4-BD26-E173-B72A7415C24D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,8 @@ Global
 		{EF4108ED-9B30-4402-A929-34FF87C65F17} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{13AF559C-9DEE-055B-40F5-89F094710283} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
+		{D3F87795-8098-4D88-BE73-29D1EA442A6A} = {9F5A6713-CBF6-4A2A-8370-CE975E006B02}
+		{930561B7-6FA4-BD26-E173-B72A7415C24D} = {9F5A6713-CBF6-4A2A-8370-CE975E006B02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BDD8726-2145-41C1-9AFD-38417F8999E8}
