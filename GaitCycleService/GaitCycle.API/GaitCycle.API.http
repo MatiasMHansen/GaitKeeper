@@ -1,0 +1,6 @@
+@GaitCycle.API_HostAddress = http://localhost:5205
+
+GET {{GaitCycle.API_HostAddress}}/
+Accept: application/json
+
+###
