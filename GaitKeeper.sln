@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.35806.103 d17.14
+VisualStudioVersion = 17.14.35806.103
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.AspireAppHost", "GaitKeeper.Aspire\GaitKeeper.AspireAppHost.csproj", "{FE5DA3EB-990B-4C61-80C5-869D89C9BBA2}"
 EndProject
