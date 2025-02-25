@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapr.AspNetCore" Version="1.14.0" />
+    <PackageReference Include="Dapr.Client" Version="1.14.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Aspire\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Subject.Application\Subject.Application.csproj" />
+    <ProjectReference Include="..\Subject.Domain\Subject.Domain.csproj" />
+    <ProjectReference Include="..\Subject.Infrastructure\Subject.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
