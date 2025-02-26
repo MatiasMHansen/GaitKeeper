@@ -1,4 +1,4 @@
-﻿namespace Subject.Application.Services.ServiceDTOs
+﻿namespace SharedKernel.Shared.DTOs
 {
     public class RawMetadataDTO
     {

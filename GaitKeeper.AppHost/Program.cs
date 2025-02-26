@@ -3,6 +3,15 @@ using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-web");
+
+builder.AddProject<Projects.Gateway_API>("gateway-api")
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "gateway",
+        DaprHttpPort = 3500
+    });
+
 builder.AddProject<Projects.Subject_API>("subject-api")
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
@@ -25,14 +34,14 @@ var pythonApp = builder.AddPythonApp(
     virtualEnvironmentPath: "../PythonC3DReader/.venv"
 )
 #pragma warning restore ASPIREHOSTINGPYTHON001
-.WithHttpEndpoint(env: "PORT") // Bruger miljøvariabel til port
+.WithHttpEndpoint(env: "PORT") // Bruger miljÃ¸variabel til port
 .WithDaprSidecar(new DaprSidecarOptions
 {
     AppId = "c3dreader",
     DaprHttpPort = 3503
 });
 
-// Sæt debug-mode, hvis app’en kører i udvikling
+// SÃ¦t debug-mode, hvis appâ€™en kÃ¸rer i udvikling
 if (builder.ExecutionContext.IsRunMode && builder.Environment.IsDevelopment())
 {
     pythonApp.WithEnvironment("DEBUG", "True");

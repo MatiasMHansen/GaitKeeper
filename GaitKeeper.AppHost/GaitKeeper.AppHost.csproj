@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorFrontend\GaitKeeper.WebAssembly\GaitKeeper.WebAssembly.csproj" />
     <ProjectReference Include="..\GaitCycleService\GaitCycle.API\GaitCycle.API.csproj" />
+    <ProjectReference Include="..\Gateway.API\Gateway.API.csproj" />
     <ProjectReference Include="..\SubjectService\Subject.API\Subject.API.csproj" />
   </ItemGroup>
 

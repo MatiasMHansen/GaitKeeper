@@ -1,9 +1,9 @@
 @Subject_API_HostAddress = http://localhost:5106
 
 ### Test Subject Service (Root Endpoint)
-GET {{Subject_API_HostAddress}}/api/subject
+GET {{Subject_API_HostAddress}}/subject
 Accept: application/json
 
 ### Get Raw C3D Metadata (c3d filer: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d" )
-GET {{Subject_API_HostAddress}}/api/subject/raw-c3d-metadata/filename.c3d
+GET {{Subject_API_HostAddress}}/subject/raw-c3d-metadata/filename.c3d
 Accept: application/json

@@ -1,11 +1,11 @@
 ﻿using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using Subject.Application.Services.ServiceDTOs;
+using SharedKernel.Shared.DTOs;
 
 namespace Subject.API.Controllers
 {
     [ApiController]
-    [Route("api/subject")]
+    [Route("subject")]
     public class SubjectController : ControllerBase
     {
         private readonly DaprClient _daprClient;
@@ -34,7 +34,7 @@ namespace Subject.API.Controllers
                 var response = await _daprClient.InvokeMethodAsync<RawMetadataDTO>(
                     HttpMethod.Get,
                     "c3dreader", // AppId fra AppHost
-                    $"metadata/{fileName}"
+                    $"metadata/{fileName}" // Endpoint i PythonC3DReader
                 );
 
                 return Ok(response);

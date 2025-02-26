@@ -10,6 +10,7 @@ builder.Services.AddControllers().AddDapr();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -19,8 +20,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// --------------- EndPoints ----------------
-app.MapGet("/", () => "Hello from GaitCycleService");
+app.UseAuthorization(); // Ikke implementeret endnu
 
 app.Run();
-

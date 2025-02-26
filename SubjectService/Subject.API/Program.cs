@@ -7,7 +7,6 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers().AddDapr();
 
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
