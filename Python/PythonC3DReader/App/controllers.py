@@ -16,8 +16,8 @@ def register_routes(app):
     @inject
     def metadata(file_name: str, c3d_service: IC3DParserService):
         try:
-            data: MetadataDTO = c3d_service.get_metadata(file_name)
-            return jsonify(data.model_dump()), 200  # Brug Pydantic's `model_dump`
+            data = c3d_service.get_metadata(file_name)          # data: MetadataDTO = c3d_service.get_metadata(file_name)
+            return jsonify(data), 200                           # return jsonify(data.model_dump()), 200  # Brug Pydantic's `model_dump`
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
