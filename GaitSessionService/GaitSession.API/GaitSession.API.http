@@ -1,7 +1,7 @@
 @GaitSession_API_HostAddress = http://localhost:5106
 
-### Test Subject Service (Root Endpoint)
-GET {{GaitSession_API_HostAddress}}/gaitsession
+### Test Service
+GET {{GaitSession_API_HostAddress}}/
 Accept: application/json
 
 ### Get Raw GaitSession (c3d filer: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d" )

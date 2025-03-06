@@ -10,6 +10,7 @@ builder.Services.AddControllers().AddDapr();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -19,7 +20,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// --------------- EndPoints ----------------
+// --------------- EndPoint 'Health check' ----------------
 app.MapGet("/", () => "Hello from GaitPointDataService");
 
 app.Run();

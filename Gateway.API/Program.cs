@@ -22,4 +22,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization(); // Ikke implementeret endnu
 
+// --------------- EndPoint 'Health check' ----------------
+app.MapGet("/", () => "Hello from Gateway");
+
 app.Run();

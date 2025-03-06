@@ -1,6 +1,6 @@
 ﻿namespace Shared.DTOs.RawGaitData
 {
-    public class RawGaitSessionDTO
+    public class RawGaitSessionDTO // Aggregate
     {
         public string SubjectId { get; set; }
         public BiometricsDTO Biometrics { get; set; }

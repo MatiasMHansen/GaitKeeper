@@ -1,5 +1,6 @@
 import ezc3d
 import os
+import math
 import numpy as np
 from typing import List, Dict
 from App.interfaces import IC3DParserService
@@ -85,11 +86,12 @@ class C3DParserService(IC3DParserService):
         all_labels = self._fetch_list(parameters, 'POINT', 'LABELS')
 
         # Extract GaitEvents
+        time_values = self._fetch_list(parameters, 'EVENT', 'TIMES')
         gait_events = GaitEvents(
             Label = self._fetch_list(parameters, 'EVENT', 'LABELS'),
             Context = self._fetch_list(parameters, 'EVENT', 'CONTEXTS'),
             Description = self._fetch_list(parameters, 'EVENT', 'DESCRIPTIONS'),
-            Time = self._fetch_list(parameters, 'EVENT', 'TIMES')
+            Time = time_values[1] if isinstance(time_values, list) and len(time_values) > 1 else []
         )
 
         # Debugging: Matcher antal labels og markører
@@ -145,11 +147,16 @@ class C3DParserService(IC3DParserService):
             for frame in range(point_data.shape[2]):  # nb_frames
                 x, y, z, _ = point_data[:, index, frame]  # Sidste værdi (_) er residual/error
 
+                # Tjek om værdierne er NaN. Hvis de er, sæt dem til None, ellers konverter til float.
+                X_val = None if math.isnan(x) else float(x)
+                Y_val = None if math.isnan(y) else float(y)
+                Z_val = None if math.isnan(z) else float(z)
+
                 # Tilføj frame data til units_list
                 units_list.append(Unit(
-                    X=float(x),
-                    Y=float(y),
-                    Z=float(z)
+                    X=X_val,
+                    Y=Y_val,
+                    Z=Z_val
                 ))
 
             # Opret marker objekt

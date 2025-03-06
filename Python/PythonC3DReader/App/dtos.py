@@ -18,25 +18,25 @@ class GaitSession(BaseModel): # Aggregate
     SystemInfo: SystemInfo
 
 class Unit(BaseModel):
-    X : Any
-    Y : Any
-    Z : Any
+    X: Optional[float]
+    Y: Optional[float]
+    Z: Optional[float]
 
 class Marker(BaseModel):
-    Label: Any
-    UnitType: Any
+    Label: str
+    UnitType: str
     Units: List[Unit]
 
 class GaitEvents(BaseModel):
-    Label: Any
-    Context: Any
-    Description: Any
-    Time: Any
+    Label: List[str]
+    Context: List[str]
+    Description: List[str]
+    Time: List[float]
 
 class PointData(BaseModel): # Aggregate
-    StartFrame: Any
-    EndFrame: Any
-    PointFreq: Any
-    AllLabels: Any
+    StartFrame: int
+    EndFrame: int
+    PointFreq: float
+    AllLabels: List[str]
     Markers: List[Marker]
     GaitEvents: GaitEvents

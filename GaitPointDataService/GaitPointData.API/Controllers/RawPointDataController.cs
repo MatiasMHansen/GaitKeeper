@@ -2,32 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs.RawGaitData;
 
-namespace GaitSession.API.Controllers
+namespace GaitPointData.API.Controllers
 {
     [ApiController]
-    [Route("gaitsession")]
-    public class RawGaitSessionController : ControllerBase
+    [Route("pointdata")]
+    public class RawPointDataController : ControllerBase
     {
         private readonly DaprClient _daprClient;
 
-        public RawGaitSessionController(DaprClient daprClient)
+        public RawPointDataController(DaprClient daprClient)
         {
             _daprClient = daprClient;
         }
 
-        // Kalder PythonC3DReader via Dapr Service Invocation -> Henter GaitSession-data fra C3D-fil
+        // Kalder PythonC3DReader via Dapr Service Invocation -> Henter PointData fra C3D-fil
         [HttpGet("raw/{fileName}")]
-        public async Task<IActionResult> GetRawGaitSession(string fileName)
+        public async Task<IActionResult> GetRawPointData(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return BadRequest("File name is required.");
 
             try
             {
-                var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
+                var response = await _daprClient.InvokeMethodAsync<RawPointDataDTO>(
                     HttpMethod.Get,
                     "c3dreader", // AppId fra AppHost
-                    $"gaitsession/{fileName}" // Endpoint i PythonC3DReader
+                    $"pointdata/{fileName}" // Endpoint i PythonC3DReader
                 );
 
                 return Ok(response);

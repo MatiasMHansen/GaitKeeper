@@ -20,4 +20,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// --------------- EndPoint 'Health check' ----------------
+app.MapGet("/", () => "Hello from GaitSessionService");
+
 app.Run();

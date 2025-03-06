@@ -11,11 +11,13 @@
 
   <ItemGroup>
     <PackageReference Include="Dapr.AspNetCore" Version="1.14.0" />
+    <PackageReference Include="Dapr.Client" Version="1.14.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\SharedKernel\Shared.DTOs\Shared.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

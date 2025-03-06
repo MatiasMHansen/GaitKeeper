@@ -27,5 +27,18 @@ namespace Gateway.API.Controllers
 
             return Ok(response);
         }
+
+        // Proxy for GaitPointDataService's GetRawGaitSession
+        [HttpGet("pointdata/{fileName}")]
+        public async Task<IActionResult> GetRawPointData(string fileName)
+        {
+            var response = await _daprClient.InvokeMethodAsync<RawPointDataDTO>(
+                HttpMethod.Get,
+                "gaitpointdataservice", // AppId fra AppHost
+                $"pointdata/raw/{fileName}" // Endpoint i GaitPointDataService
+            );
+
+            return Ok(response);
+        }
     }
 }
