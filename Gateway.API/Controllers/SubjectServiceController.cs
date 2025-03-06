@@ -1,11 +1,11 @@
 ﻿using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Shared.DTOs;
+using Shared.DTOs.RawGaitData;
 
 namespace Gateway.API.Controllers
 {
     [ApiController]
-    [Route("gateway/subject")]
+    [Route("gateway/preview")]
     public class SubjectServiceController : ControllerBase
     {
         private readonly DaprClient _daprClient;
@@ -16,13 +16,13 @@ namespace Gateway.API.Controllers
         }
 
         // Proxy for SubjectService's GetRawC3DMetadata
-        [HttpGet("raw-c3d-metadata/{fileName}")]
+        [HttpGet("gaitsession/{fileName}")]
         public async Task<IActionResult> GetRawC3DMetadata(string fileName)
         {
-            var response = await _daprClient.InvokeMethodAsync<RawMetadataDTO>(
+            var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
                 HttpMethod.Get,
                 "subjectservice", // AppId fra AppHost
-                $"subject/raw-c3d-metadata/{fileName}" // Endpoint i SubjectService
+                $"gaitsession/raw/{fileName}" // Endpoint i SubjectService
             );
 
             return Ok(response);

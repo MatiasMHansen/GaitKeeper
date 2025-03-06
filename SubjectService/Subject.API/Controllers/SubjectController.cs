@@ -1,11 +1,11 @@
 ﻿using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Shared.DTOs;
+using Shared.DTOs.RawGaitData;
 
 namespace Subject.API.Controllers
 {
     [ApiController]
-    [Route("subject")]
+    [Route("gaitsession")]
     public class SubjectController : ControllerBase
     {
         private readonly DaprClient _daprClient;
@@ -23,7 +23,7 @@ namespace Subject.API.Controllers
         }
 
         // Kalder PythonC3DReader via Dapr Service Invocation -> Henter metadata fra C3D-fil
-        [HttpGet("raw-c3d-metadata/{fileName}")]
+        [HttpGet("raw/{fileName}")]
         public async Task<IActionResult> GetRawC3DMetadata(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -31,10 +31,10 @@ namespace Subject.API.Controllers
 
             try
             {
-                var response = await _daprClient.InvokeMethodAsync<RawMetadataDTO>(
+                var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
                     HttpMethod.Get,
                     "c3dreader", // AppId fra AppHost
-                    $"metadata/{fileName}" // Endpoint i PythonC3DReader
+                    $"gaitsession/{fileName}" // Endpoint i PythonC3DReader
                 );
 
                 return Ok(response);

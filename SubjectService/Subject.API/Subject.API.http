@@ -4,6 +4,6 @@
 GET {{Subject_API_HostAddress}}/subject
 Accept: application/json
 
-### Get Raw C3D Metadata (c3d filer: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d" )
-GET {{Subject_API_HostAddress}}/subject/raw-c3d-metadata/filename.c3d
+### Get Raw GaitSession (c3d filer: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d" )
+GET {{Subject_API_HostAddress}}/subject/raw-gaitsession/Walk_Comfortable1.c3d
 Accept: application/json

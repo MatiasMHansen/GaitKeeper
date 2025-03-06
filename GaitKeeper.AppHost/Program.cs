@@ -1,9 +1,11 @@
+using Aspire.Hosting;
 using Aspire.Hosting.Dapr;
 using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-web");
+
 
 builder.AddProject<Projects.Gateway_API>("gateway-api")
     .WithDaprSidecar(new DaprSidecarOptions

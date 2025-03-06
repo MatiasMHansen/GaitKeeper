@@ -2,5 +2,5 @@
 
 ### Flow: Gateway -> SubjectServce -> PythonC3DReader 
 ### c3d filer til test: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d"
-GET {{Gateway.API_HostAddress}}/gateway/subject/raw-c3d-metadata/filename.c3d
+GET {{Gateway.API_HostAddress}}/gateway/subject/raw-gaitsession/Walk_Comfortable1.c3d
 Accept: application/json
