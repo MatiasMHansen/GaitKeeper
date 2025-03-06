@@ -14,17 +14,17 @@ builder.AddProject<Projects.Gateway_API>("gateway-api")
         DaprHttpPort = 3500
     });
 
-builder.AddProject<Projects.Subject_API>("subject-api")
+builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
-        AppId = "subjectservice",
+        AppId = "gaitsessionservice",
         DaprHttpPort = 3501
     });
 
-builder.AddProject<Projects.GaitCycle_API>("gaitcycle-api")
+builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
     .WithDaprSidecar(new DaprSidecarOptions
     {
-        AppId = "gaitcycleservice",
+        AppId = "gaitpointdataservice",
         DaprHttpPort = 3502
     });
 

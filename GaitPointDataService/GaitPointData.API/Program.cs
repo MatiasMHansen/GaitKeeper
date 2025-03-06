@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // --------------- EndPoints ----------------
-app.MapGet("/", () => "Hello from GaitCycleService");
+app.MapGet("/", () => "Hello from GaitPointDataService");
 
 app.Run();
 

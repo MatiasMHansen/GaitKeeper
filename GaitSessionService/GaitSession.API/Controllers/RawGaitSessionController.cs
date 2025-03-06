@@ -2,29 +2,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs.RawGaitData;
 
-namespace Subject.API.Controllers
+namespace GaitSession.API.Controllers
 {
     [ApiController]
     [Route("gaitsession")]
-    public class SubjectController : ControllerBase
+    public class GaitSessionController : ControllerBase
     {
         private readonly DaprClient _daprClient;
 
-        public SubjectController(DaprClient daprClient)
+        public GaitSessionController(DaprClient daprClient)
         {
             _daprClient = daprClient;
         }
 
-        // Simpel endpoint til at teste, om SubjectService er oppe
+        // Simpel endpoint til at teste, om GaitSessionService er oppe
         [HttpGet]
         public IActionResult GetServiceInfo()
         {
-            return Ok("Hello from SubjectService");
+            return Ok("Hello from GaitSessionService");
         }
 
-        // Kalder PythonC3DReader via Dapr Service Invocation -> Henter metadata fra C3D-fil
+        // Kalder PythonC3DReader via Dapr Service Invocation -> Henter GaitSession-data fra C3D-fil
         [HttpGet("raw/{fileName}")]
-        public async Task<IActionResult> GetRawC3DMetadata(string fileName)
+        public async Task<IActionResult> GetRawGaitSession(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return BadRequest("File name is required.");

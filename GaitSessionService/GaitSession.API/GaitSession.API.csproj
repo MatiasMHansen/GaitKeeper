@@ -15,9 +15,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\SharedKernel\Shared.DTOs\Shared.DTOs.csproj" />
-    <ProjectReference Include="..\Subject.Application\Subject.Application.csproj" />
-    <ProjectReference Include="..\Subject.Domain\Subject.Domain.csproj" />
-    <ProjectReference Include="..\Subject.Infrastructure\Subject.Infrastructure.csproj" />
+    <ProjectReference Include="..\GaitSession.Application\GaitSession.Application.csproj" />
+    <ProjectReference Include="..\GaitSession.Domain\GaitSession.Domain.csproj" />
+    <ProjectReference Include="..\GaitSession.Infrastructure\GaitSession.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

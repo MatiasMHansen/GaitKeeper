@@ -6,23 +6,23 @@ namespace Gateway.API.Controllers
 {
     [ApiController]
     [Route("gateway/preview")]
-    public class SubjectServiceController : ControllerBase
+    public class PreviewGaitDataController : ControllerBase
     {
         private readonly DaprClient _daprClient;
 
-        public SubjectServiceController(DaprClient daprClient)
+        public PreviewGaitDataController(DaprClient daprClient)
         {
             _daprClient = daprClient;
         }
 
-        // Proxy for SubjectService's GetRawC3DMetadata
+        // Proxy for GaitSessionService's GetRawGaitSession
         [HttpGet("gaitsession/{fileName}")]
-        public async Task<IActionResult> GetRawC3DMetadata(string fileName)
+        public async Task<IActionResult> GetRawGaitSession(string fileName)
         {
             var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
                 HttpMethod.Get,
-                "subjectservice", // AppId fra AppHost
-                $"gaitsession/raw/{fileName}" // Endpoint i SubjectService
+                "gaitsessionservice", // AppId fra AppHost
+                $"gaitsession/raw/{fileName}" // Endpoint i GaitSessionService
             );
 
             return Ok(response);

@@ -7,23 +7,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PythonC3DReader", "PythonC3
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonC3DReader", "Python\PythonC3DReader\PythonC3DReader.pyproj", "{EF4108ED-9B30-4402-A929-34FF87C65F17}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SubjectService", "SubjectService", "{C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GaitSessionService", "GaitSessionService", "{C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GaitCycleService", "GaitCycleService", "{482957CB-6AFE-4A3C-BAA4-2B766F0343C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GaitPointDataService", "GaitPointDataService", "{482957CB-6AFE-4A3C-BAA4-2B766F0343C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subject.API", "SubjectService\Subject.API\Subject.API.csproj", "{13AF559C-9DEE-055B-40F5-89F094710283}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.API", "GaitSessionService\GaitSession.API\GaitSession.API.csproj", "{13AF559C-9DEE-055B-40F5-89F094710283}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitCycle.API", "GaitCycleService\GaitCycle.API\GaitCycle.API.csproj", "{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitPointData.API", "GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj", "{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.AppHost", "GaitKeeper.AppHost\GaitKeeper.AppHost.csproj", "{2FAEFB2D-E6EA-4B47-855C-482F3D1ADFB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.ServiceDefaults", "GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj", "{C5A45DCC-F8DC-632F-C6CB-EC7C7FD053B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subject.Application", "SubjectService\Subject.Application\Subject.Application.csproj", "{D213C35D-51ED-4920-A4FE-DCC81C3A52C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Application", "GaitSessionService\GaitSession.Application\GaitSession.Application.csproj", "{D213C35D-51ED-4920-A4FE-DCC81C3A52C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subject.Domain", "SubjectService\Subject.Domain\Subject.Domain.csproj", "{DE11B50C-128F-4381-9C8B-FFCE2921B40D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Domain", "GaitSessionService\GaitSession.Domain\GaitSession.Domain.csproj", "{DE11B50C-128F-4381-9C8B-FFCE2921B40D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subject.Infrastructure", "SubjectService\Subject.Infrastructure\Subject.Infrastructure.csproj", "{0043DD7F-C479-42DA-BE09-44E830DADE22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Infrastructure", "GaitSessionService\GaitSession.Infrastructure\GaitSession.Infrastructure.csproj", "{0043DD7F-C479-42DA-BE09-44E830DADE22}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlazorFrontend", "BlazorFrontend", "{C1B60C86-D71D-4DAB-9BE8-98A05027D306}"
 EndProject
