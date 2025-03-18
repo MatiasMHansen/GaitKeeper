@@ -19,26 +19,40 @@ namespace Gateway.API.Controllers
         [HttpGet("gaitsession/{fileName}")]
         public async Task<IActionResult> GetRawGaitSession(string fileName)
         {
-            var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
-                HttpMethod.Get,
-                "gaitsessionservice", // AppId fra AppHost
-                $"gaitsession/raw/{fileName}" // Endpoint i GaitSessionService
-            );
+            try
+            {
+                var response = await _daprClient.InvokeMethodAsync<RawGaitSessionDTO>(
+                        HttpMethod.Get,
+                        "gaitsessionservice", // AppId fra AppHost
+                        $"gaitsession/raw/{fileName}" // Endpoint i GaitSessionService
+                    );
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new {error = $"Failed to retrive data: {ex.Message}"});
+            }
         }
 
-        // Proxy for GaitPointDataService's GetRawGaitSession
+        // Proxy for GaitPointDataService's GetRawPointData
         [HttpGet("pointdata/{fileName}")]
         public async Task<IActionResult> GetRawPointData(string fileName)
         {
-            var response = await _daprClient.InvokeMethodAsync<RawPointDataDTO>(
-                HttpMethod.Get,
-                "gaitpointdataservice", // AppId fra AppHost
-                $"pointdata/raw/{fileName}" // Endpoint i GaitPointDataService
-            );
+            try
+            {
+                var response = await _daprClient.InvokeMethodAsync<RawPointDataDTO>(
+                        HttpMethod.Get,
+                        "gaitpointdataservice", // AppId fra AppHost
+                        $"pointdata/raw/{fileName}" // Endpoint i GaitPointDataService
+                    );
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new {error = $"Failed to retrive data: {ex.Message}"});
+            }
         }
     }
 }
