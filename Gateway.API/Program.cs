@@ -5,22 +5,25 @@ builder.AddServiceDefaults();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddControllers().AddDapr();
+builder.Services.AddDaprClient(); // Registrerer Dapr Client for service-to-service kald
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy")); // YARP konfiguration
+
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-app.MapControllers();
+app.UseRouting();
+app.UseHttpsRedirection();
+app.UseAuthorization(); // Ikke implementeret endnu
+
+app.MapDefaultEndpoints(); // Aspire default endpoints
+app.MapReverseProxy(); // YARP håndterer nu alle ruter baseret på appsettings.json
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization(); // Ikke implementeret endnu
 
 // --------------- EndPoint 'Health check' ----------------
 app.MapGet("/", () => "Hello from Gateway");
