@@ -1,0 +1,32 @@
+﻿@page "/save-gait-data"
+@using GaitKeeper.WebAssembly.Services
+@using Shared.DTOs
+@inject SaveGaitDataService SaveGaitDataService
+
+<h3>Upload Gait Data</h3>
+
+<EditForm Model="@gaitData" OnValidSubmit="SubmitData">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label>Subject ID:</label>
+        <InputText @bind-Value="gaitData.SubjectId" />
+    </div>
+
+    <button type="submit">Save Gait Data</button>
+</EditForm>
+
+@if (isSuccess)
+{
+    <p>✅ Data successfully saved!</p>
+}
+
+@code {
+    private GaitMetadataDTO gaitData = new GaitMetadataDTO();
+    private bool isSuccess = false;
+
+    private async Task SubmitData()
+    {
+        isSuccess = await SaveGaitDataService.SaveGaitData(gaitData);
+    }
+}

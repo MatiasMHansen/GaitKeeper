@@ -9,8 +9,21 @@ builder.Services.AddDaprClient(); // Registrerer Dapr Client for service-to-serv
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy")); // YARP konfiguration
 
+// TILFØJ CORS KONFIGURATION
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+        {
+            policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost") // ONLY UNDER DEVELOPMENT!!!
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
+
+//// AKTIVER CORS I PIPELINE
+app.UseCors("AllowBlazorClient");
 
 app.UseRouting();
 app.UseHttpsRedirection();
