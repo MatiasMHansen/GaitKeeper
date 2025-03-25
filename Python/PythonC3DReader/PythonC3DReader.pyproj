@@ -24,7 +24,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App\controllers.py" />
-    <Compile Include="App\dtos.py" />
+    <Compile Include="App\models.py" />
     <Compile Include="App\interfaces.py" />
     <Compile Include="App\services.py" />
     <Compile Include="App\__init__.py" />
