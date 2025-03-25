@@ -10,11 +10,6 @@ builder.Services.AddControllers().AddDapr();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
-app.UseCloudEvents(); // Dapr will send serialized event object vs. being raw CloudEvent
-app.MapSubscribeHandler(); // needed for Dapr pub/sub routing
-
-// MapSubscribeHandler & UseCloudEvents skal kaldes før MapControllers?
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
@@ -23,9 +18,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// app.UseHttpsRedirection(); Dapr kører kun med http - ASP.NET redirecter sandsynligvis fra http -> https
+app.UseHttpsRedirection();
 
 // --------------- EndPoint 'Health check' ----------------
-app.MapGet("/", () => "Hello from GaitSessionService");
+app.MapGet("/", () => "Hello from GaitDataOrchestartorService");
 
 app.Run();

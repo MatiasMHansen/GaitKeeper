@@ -16,10 +16,12 @@
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.Dapr" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.Python" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorFrontend\GaitKeeper.WebAssembly\GaitKeeper.WebAssembly.csproj" />
+    <ProjectReference Include="..\GaitDataOrchestratorService\GaitDataOrchestrator.API\GaitDataOrchestrator.API.csproj" />
     <ProjectReference Include="..\GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj" />
     <ProjectReference Include="..\Gateway.API\Gateway.API.csproj" />
     <ProjectReference Include="..\GaitSessionService\GaitSession.API\GaitSession.API.csproj" />

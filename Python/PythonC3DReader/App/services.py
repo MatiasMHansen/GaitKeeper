@@ -15,7 +15,7 @@ class C3DParserService(IC3DParserService):
             raise FileNotFoundError(f"C3D-filen '{file_name}' blev ikke fundet i {Config.DOWNLOADS_FOLDER}")
         return ezc3d.c3d(file_path)
     
-    # Helper funktion til robust parameterhåndtering (håndterer NumPy-datatyper).
+    # Intern hjælpe funktioner til robust parameterhåndtering (håndterer NumPy-datatyper).
     def _fetch_value(self, parameters: dict, group: str, variable: str, default=None):
         value = parameters.get(group, {}).get(variable, {}).get('value', [default])[0]
 
@@ -113,6 +113,13 @@ class C3DParserService(IC3DParserService):
         modeled_labels = self._fetch_list(parameters, 'POINT', 'MODELED_MARKERS')
         moment_labels = self._fetch_list(parameters, 'POINT', 'MOMENTS')
         power_labels = self._fetch_list(parameters, 'POINT', 'POWERS')
+
+        # Mere debugging: Antal labels i hver kategori
+        print(f"Angle Labels: {len(angle_labels)}")
+        print(f"Force Labels: {len(force_labels)}")
+        print(f"Modeled Labels: {len(modeled_labels)}")
+        print(f"Moment Labels: {len(moment_labels)}")
+        print(f"Power Labels: {len(power_labels)}")
         
         # Hent måleenheder for markørerne
         angle_unit = self._fetch_value(parameters, 'POINT', 'ANGLE_UNITS')

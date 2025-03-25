@@ -15,7 +15,7 @@ namespace GaitKeeper.WebAssembly.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> SaveGaitData(GaitMetadataDTO request)
+        public async Task<bool> SaveGaitData(GaitDataDTO request)
         {
             var response = await _httpClient.PostAsJsonAsync("gaitsession/post", request);
 

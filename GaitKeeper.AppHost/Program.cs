@@ -1,10 +1,10 @@
-using Aspire.Hosting;
 using Aspire.Hosting.Dapr;
 using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-web");
+var rabbitMq = builder.AddRabbitMQ("rabbitmq")
+    .WithManagementPlugin();
 
 
 builder.AddProject<Projects.Gateway_API>("gateway-api")
@@ -15,6 +15,7 @@ builder.AddProject<Projects.Gateway_API>("gateway-api")
     });
 
 builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
+    .WithReference(rabbitMq)
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
         AppId = "gaitsessionservice",
@@ -22,10 +23,19 @@ builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
     });
 
 builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
+    .WithReference(rabbitMq)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gaitpointdataservice",
         DaprHttpPort = 3502
+    });
+
+builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api")
+    .WithReference(rabbitMq)
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "gaitdataorchestratorservice",
+        DaprHttpPort = 3503
     });
 
 #pragma warning disable ASPIREHOSTINGPYTHON001
@@ -40,7 +50,7 @@ var pythonApp = builder.AddPythonApp(
 .WithDaprSidecar(new DaprSidecarOptions
 {
     AppId = "c3dreader",
-    DaprHttpPort = 3503
+    DaprHttpPort = 3504
 });
 
 // Sæt debug-mode, hvis app’en kører i udvikling
