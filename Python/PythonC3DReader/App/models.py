@@ -2,41 +2,41 @@ from pydantic import BaseModel
 from typing import Any, List, Optional, Type
 
 class Biometrics(BaseModel):
-    Height: Any
-    Weight: Any
-    LLegLength: Any
-    RLegLength: Any
+    Height: float
+    Weight: float
+    LLegLength: float
+    RLegLength: float
 
 class SystemInfo(BaseModel):
-    Software: Any
-    Version: Any
-    MarkerSetup: Any
+    Software: str
+    Version: str
+    MarkerSetup: str
 
 class GaitAnalysis(BaseModel):
-    Name: Any
-    Description: Any
-    Context: Any
-    UnitType: Any
-    Value: Any
+    Name: str
+    Description: str
+    Context: str
+    UnitType: str
+    Value: float
 
 class GaitCycle(BaseModel):
-    Name: Any
-    Description: Any
-    Number: Any
-    StartFrame: Any
-    EndFrame: Any
-    EventStart: Any
-    EventEnd: Any
-    Duration: Any
+    Name: str
+    Description: str
+    Number: int
+    StartFrame: int
+    EndFrame: int
+    EventStart: float
+    EventEnd: float
+    Duration: float
 
 class GaitSession(BaseModel): # Aggregate
-    FileName: Any
-    SubjectId: Any
-    PointFreq: Any
-    AnalogFreq: Any
-    StartFrame: Any
-    EndFrame: Any
-    TotalFrames: Any
+    FileName: str
+    SubjectId: str
+    PointFreq: float
+    AnalogFreq: float
+    StartFrame: int
+    EndFrame: int
+    TotalFrames: int
     Biometrics: Biometrics
     SystemInfo: SystemInfo
     LGaitCycles: List[GaitCycle]
@@ -49,17 +49,17 @@ class Unit(BaseModel):
     Z: Optional[float]
 
 class Marker(BaseModel):
-    Label: Any
-    UnitType: Any
+    Label: str
+    UnitType: str
     Units: List[Unit]
 
 class PointData(BaseModel): # Aggregate
-    FileName: Any
-    SubjectId: Any
-    PointFreq: Any
-    StartFrame: Any
-    EndFrame: Any
-    TotalFrames: Any
+    FileName: str
+    SubjectId: str
+    PointFreq: float
+    StartFrame: int
+    EndFrame: int
+    TotalFrames: int
     PointMarkers: List[Marker]
     AngleMarkers: List[Marker]
     ForceMarkers: List[Marker]

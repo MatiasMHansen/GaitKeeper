@@ -1,6 +1,9 @@
 ﻿using Dapr;
+using Dapr.Client;
+using GaitPointData.Application.Command;
+using GaitPointData.Application.Command.CommandDTOs;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DTOs;
+using Shared.DTOs.PubSubDTOs;
 
 namespace GaitPointData.API.Controllers
 {
@@ -8,25 +11,59 @@ namespace GaitPointData.API.Controllers
     [Route("pointdata")]
     public class SavePointDataController : ControllerBase
     {
-        public SavePointDataController()
-        {
+        private readonly DaprClient _daprClient;
+        private readonly IPointDataCommand _pointDataCommand;
 
+        public SavePointDataController(DaprClient daprClient, IPointDataCommand pointDataCommand)
+        {
+            _daprClient = daprClient;
+            _pointDataCommand = pointDataCommand;
         }
 
         [Topic("pubsub", "save-point-data")]
-        public async Task<IActionResult> HandleSavePointDataEvent([FromBody] GaitDataEventDTO gaitDataEvent)
+        public async Task<IActionResult> HandleSavePointDataEvent([FromBody] GaitDataKeysDTO gaitDataKeys)
         {
             try
             {
-                Console.WriteLine($"✅ Received PointData save request for: {gaitDataEvent.FileName}, SubjectId: {gaitDataEvent.SubjectId}");
-                // TODO: Kald PythonC3DReader for PointData
-                // TODO: Valider & gem i database
+                Console.WriteLine($"📩 Received PointData save request for: {gaitDataKeys.FileName}");
 
+                // GET: Kald PythonC3DReader for PointData
+                var createPointDataDTO = await _daprClient.InvokeMethodAsync<CreatePointDataDTO>(
+                    HttpMethod.Get,
+                    "c3dreader", // AppId fra AppHost
+                    $"pointdata/{gaitDataKeys.FileName}" // Endpoint i PythonC3DReader
+                );
+
+                // Inject Id
+                createPointDataDTO.Id = gaitDataKeys.CorrelationId;
+
+                // TODO: Kald IPointDataCommand
+                await _pointDataCommand.CreateAsync(createPointDataDTO);
+
+                // Send status tilbage til Orchestrator
+                //await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
+                //{
+                //    Service = "GaitPointDataService",
+                //    CorrelationId = gaitDataKeys.CorrelationId,
+                //    Success = true
+                //});
+
+                Console.WriteLine($"✅ PointData from the C3D file: {gaitDataKeys.FileName} have successfully been saved");
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Exception in subscriber: {ex.Message}");
+                Console.WriteLine($"❌ Exception in 'HandleSavePointDataEvent' method: {ex.Message}");
+
+                // Send fejlstatus tilbage til Orchestrator
+                //await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
+                //{
+                //    Service = "GaitPointDataService",
+                //    CorrelationId = gaitDataKeys?.CorrelationId ?? "",
+                //    Success = false,
+                //    ErrorMessage = ex.Message
+                //});
+
                 return StatusCode(500);
             }
         }

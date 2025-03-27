@@ -18,6 +18,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\SharedKernel\Shared.DTOs\Shared.DTOs.csproj" />
+    <ProjectReference Include="..\GaitPointData.Application\GaitPointData.Application.csproj" />
+    <ProjectReference Include="..\GaitPointData.Infrastructure\GaitPointData.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

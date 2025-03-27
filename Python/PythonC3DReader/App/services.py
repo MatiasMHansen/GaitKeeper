@@ -162,7 +162,7 @@ class C3DParserService(IC3DParserService):
         point_data = c3d["data"]["points"]
 
         # Extract PointData
-        subject_id=self._fetch_value(parameters, 'SUBJECTS', 'NAMES'),
+        subject_id=self._fetch_value(parameters, 'SUBJECTS', 'NAMES')
         point_freq = self._fetch_value(parameters, 'POINT', 'RATE')
         start_frame = self._fetch_value(parameters, 'TRIAL', 'ACTUAL_START_FIELD')
         end_frame = self._fetch_value(parameters, 'TRIAL', 'ACTUAL_END_FIELD')

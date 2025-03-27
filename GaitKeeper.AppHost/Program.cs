@@ -1,3 +1,4 @@
+using Aspire.Hosting;
 using Aspire.Hosting.Dapr;
 using Microsoft.Extensions.Hosting;
 
@@ -6,8 +7,16 @@ var builder = DistributedApplication.CreateBuilder(args);
 var rabbitMq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
 
+var minio = builder.AddContainer("minio", "minio/minio", "latest")
+    .WithEnvironment("MINIO_ACCESS_KEY", "admin")
+    .WithEnvironment("MINIO_SECRET_KEY", "adminadmin")
+    .WithArgs("server", "/data", "--console-address", ":9001")
+    .WithVolume("minio-data", "/data")
+    .WithHttpEndpoint(name: "web", port: 9000, targetPort: 9000)       // MinIO API
+    .WithHttpEndpoint(name: "console", port: 9001, targetPort: 9001);   // MinIO UI
 
 builder.AddProject<Projects.Gateway_API>("gateway-api")
+    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gateway",
@@ -16,6 +25,7 @@ builder.AddProject<Projects.Gateway_API>("gateway-api")
 
 builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
     .WithReference(rabbitMq)
+    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
         AppId = "gaitsessionservice",
@@ -24,6 +34,7 @@ builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
 
 builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
     .WithReference(rabbitMq)
+    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gaitpointdataservice",
@@ -32,6 +43,7 @@ builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
 
 builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api")
     .WithReference(rabbitMq)
+    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gaitdataorchestratorservice",
@@ -46,7 +58,8 @@ var pythonApp = builder.AddPythonApp(
     virtualEnvironmentPath: "../PythonC3DReader/.venv"
 )
 #pragma warning restore ASPIREHOSTINGPYTHON001
-.WithHttpEndpoint(env: "PORT") // Bruger miljøvariabel til port
+.WithHttpEndpoint(env: "PORT") // Matcher porten i main.py
+.WaitFor(minio)
 .WithDaprSidecar(new DaprSidecarOptions
 {
     AppId = "c3dreader",
