@@ -34,4 +34,3 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/", () => "Hello from GaitPointDataService");
 
 app.Run();
-
