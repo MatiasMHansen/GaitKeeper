@@ -1,8 +1,9 @@
-using Aspire.Hosting;
-using Aspire.Hosting.Dapr;
 using Microsoft.Extensions.Hosting;
+using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
+
+var stateStore = builder.AddDaprStateStore("statestore");
 
 var rabbitMq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
@@ -43,6 +44,7 @@ builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
 
 builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api")
     .WithReference(rabbitMq)
+    .WithReference(stateStore)
     .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
@@ -53,7 +55,7 @@ builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api"
 #pragma warning disable ASPIREHOSTINGPYTHON001
 var pythonApp = builder.AddPythonApp(
     name: "pythonc3dreader",
-    projectDirectory: "../Python/PythonC3DReader",
+    appDirectory: "../Python/PythonC3DReader",
     scriptPath: "main.py",
     virtualEnvironmentPath: "../PythonC3DReader/.venv"
 )

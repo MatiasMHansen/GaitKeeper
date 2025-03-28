@@ -41,12 +41,12 @@ namespace GaitPointData.API.Controllers
                 await _pointDataCommand.CreateAsync(createPointDataDTO);
 
                 // Send status tilbage til Orchestrator
-                //await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
-                //{
-                //    Service = "GaitPointDataService",
-                //    CorrelationId = gaitDataKeys.CorrelationId,
-                //    Success = true
-                //});
+                await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
+                {
+                    Service = "GaitPointDataService",
+                    CorrelationId = gaitDataKeys.CorrelationId,
+                    Success = true
+                });
 
                 Console.WriteLine($"✅ PointData from the C3D file: {gaitDataKeys.FileName} have successfully been saved");
                 return Ok();
@@ -56,13 +56,13 @@ namespace GaitPointData.API.Controllers
                 Console.WriteLine($"❌ Exception in 'HandleSavePointDataEvent' method: {ex.Message}");
 
                 // Send fejlstatus tilbage til Orchestrator
-                //await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
-                //{
-                //    Service = "GaitPointDataService",
-                //    CorrelationId = gaitDataKeys?.CorrelationId ?? "",
-                //    Success = false,
-                //    ErrorMessage = ex.Message
-                //});
+                await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
+                {
+                    Service = "GaitPointDataService",
+                    CorrelationId = gaitDataKeys.CorrelationId,
+                    Success = false,
+                    ErrorMessage = ex.Message
+                });
 
                 return StatusCode(500);
             }

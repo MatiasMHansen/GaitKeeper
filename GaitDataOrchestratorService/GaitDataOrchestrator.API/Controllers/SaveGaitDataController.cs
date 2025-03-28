@@ -37,7 +37,7 @@ namespace GaitDataOrchestrator.API.Controllers
                 // Publish til RabbitMQ via Dapr PubSub
                 await _daprClient.PublishEventAsync("pubsub", "save-gait-session", message);
                 await _daprClient.PublishEventAsync("pubsub", "save-point-data", message);
-                // await _daprClient.PublishEventAsync("pubsub", "save-analog-data", message); Ikke implementeret endnu
+                // await _daprClient.PublishEventAsync("pubsub", "save-analog-data", message); Ikke implementeret, endnu...
 
                 Console.WriteLine($"✅ All events for {fileName} have successfully been published");
 
@@ -57,38 +57,38 @@ namespace GaitDataOrchestrator.API.Controllers
         //{
         //    Console.WriteLine($"📩 Status received from: {status.Service}, Success: {status.Success}");
 
-        //    // TODO: Gem status i hukommelse eller persistent storage
-        //    // Fx: add to Dictionary<string, List<SaveStatusDto>> based on CorrelationId
-
         //    var correlationId = status.CorrelationId;
+        //    var stateKey = $"status-{correlationId}";
 
-        //    // Simpel mock – du skal erstatte med en rigtig status-tracking service
-        //    StatusStore.Track(correlationId, status);
+        //    // 1. Hent eksisterende statusliste fra Redis state store
+        //    var statuses = await _daprClient.GetStateAsync<List<SaveStatusDTO>>("statestore", stateKey)
+        //                   ?? new List<SaveStatusDTO>();
 
-        //    var all = StatusStore.Get(correlationId);
+        //    // 2. Tilføj ny status
+        //    statuses.Add(status);
 
-        //    if (all.Count >= 2) // Fx GaitSession + PointData (ændres når du har 3)
+        //    // 3. Gem den opdaterede liste tilbage i state store
+        //    await _daprClient.SaveStateAsync("statestore", stateKey, statuses);
+
+        //    // 4. Evaluer hvis vi har modtaget fra alle forventede services
+        //    if (statuses.Count >= 2) // TODO: juster til 3 når AnalogData kommer
         //    {
-        //        if (all.Any(x => !x.Success))
+        //        if (statuses.Any(x => !x.Success))
         //        {
         //            Console.WriteLine($"❌ Failure detected – initier rollback for {correlationId}");
 
-        //            await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", new
-        //            {
-        //                CorrelationId = correlationId
-        //            });
+        //            await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", correlationId);
         //        }
         //        else
         //        {
         //            Console.WriteLine($"✅ All saves succeeded for {correlationId} – GaitData saved!");
         //        }
 
-        //        // Ryd op efter orchestration
-        //        StatusStore.Remove(correlationId);
+        //        // 5. Ryd op – slet nøgle fra Redis
+        //        await _daprClient.DeleteStateAsync("statestore", stateKey);
         //    }
 
         //    return Ok();
         //}
-
     }
 }
