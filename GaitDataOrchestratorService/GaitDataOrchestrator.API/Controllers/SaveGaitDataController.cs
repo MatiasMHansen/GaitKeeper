@@ -51,44 +51,44 @@ namespace GaitDataOrchestrator.API.Controllers
             }
         }
 
-        //[Topic("pubsub", "save-status")]
-        //[HttpPost("status")]
-        //public async Task<IActionResult> HandleSaveStatus([FromBody] SaveStatusDTO status)
-        //{
-        //    Console.WriteLine($"📩 Status received from: {status.Service}, Success: {status.Success}");
+        [Topic("pubsub", "save-status")]
+        [HttpPost("status")]
+        public async Task<IActionResult> HandleSaveStatus([FromBody] SaveStatusDTO status)
+        {
+            Console.WriteLine($"📩 Status received from: {status.Service}, Success: {status.Success}");
 
-        //    var correlationId = status.CorrelationId;
-        //    var stateKey = $"status-{correlationId}";
+            var correlationId = status.CorrelationId;
+            var stateKey = $"status-{correlationId}";
 
-        //    // 1. Hent eksisterende statusliste fra Redis state store
-        //    var statuses = await _daprClient.GetStateAsync<List<SaveStatusDTO>>("statestore", stateKey)
-        //                   ?? new List<SaveStatusDTO>();
+            // 1. Hent eksisterende statusliste fra Redis state store
+            var statuses = await _daprClient.GetStateAsync<List<SaveStatusDTO>>("statestore", stateKey)
+                           ?? new List<SaveStatusDTO>();
 
-        //    // 2. Tilføj ny status
-        //    statuses.Add(status);
+            // 2. Tilføj ny status
+            statuses.Add(status);
 
-        //    // 3. Gem den opdaterede liste tilbage i state store
-        //    await _daprClient.SaveStateAsync("statestore", stateKey, statuses);
+            // 3. Gem den opdaterede liste tilbage i state store
+            await _daprClient.SaveStateAsync("statestore", stateKey, statuses);
 
-        //    // 4. Evaluer hvis vi har modtaget fra alle forventede services
-        //    if (statuses.Count >= 2) // TODO: juster til 3 når AnalogData kommer
-        //    {
-        //        if (statuses.Any(x => !x.Success))
-        //        {
-        //            Console.WriteLine($"❌ Failure detected – initier rollback for {correlationId}");
+            // 4. Evaluer hvis vi har modtaget fra alle forventede services
+            if (statuses.Count >= 2) // TODO: juster til 3 når AnalogData kommer
+            {
+                if (statuses.Any(x => !x.Success))
+                {
+                    Console.WriteLine($"❌ Failure detected – initier rollback for {correlationId}");
 
-        //            await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", correlationId);
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine($"✅ All saves succeeded for {correlationId} – GaitData saved!");
-        //        }
+                    await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", correlationId);
+                }
+                else
+                {
+                    Console.WriteLine($"✅ All saves succeeded for {correlationId} – GaitData saved!");
+                }
 
-        //        // 5. Ryd op – slet nøgle fra Redis
-        //        await _daprClient.DeleteStateAsync("statestore", stateKey);
-        //    }
+                // 5. Ryd op – slet nøgle fra Redis
+                await _daprClient.DeleteStateAsync("statestore", stateKey);
+            }
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
     }
 }
