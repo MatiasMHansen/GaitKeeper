@@ -1,12 +1,12 @@
+using Aspire.Hosting.Dapr;
 using Microsoft.Extensions.Hosting;
-using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 var stateStore = builder.AddDaprStateStore("statestore");
 
-var rabbitMq = builder.AddRabbitMQ("rabbitmq")
-    .WithManagementPlugin();
+//var rabbitMq = builder.AddRabbitMQ("rabbitmq")
+//    .WithManagementPlugin();
 
 var minio = builder.AddContainer("minio", "minio/minio", "latest")
     .WithEnvironment("MINIO_ACCESS_KEY", "admin")
