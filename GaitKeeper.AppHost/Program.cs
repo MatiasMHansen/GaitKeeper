@@ -3,10 +3,10 @@ using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var stateStore = builder.AddDaprStateStore("statestore");
-
 var rabbitMq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
+
+var redis = builder.AddRedis("redis", port: 6379);
 
 var minio = builder.AddContainer("minio", "minio/minio", "latest")
     .WithEnvironment("MINIO_ACCESS_KEY", "admin")
@@ -44,7 +44,7 @@ builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
 
 builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api")
     .WithReference(rabbitMq)
-    .WithReference(stateStore)
+    .WithReference(redis)
     .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {

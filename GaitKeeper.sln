@@ -47,6 +47,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitPointData.Domain", "Gai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitPointData.Infrastructure", "GaitPointDataService\GaitPointData.Infrastructure\GaitPointData.Infrastructure.csproj", "{CDB8C502-6AA1-4342-BD44-1B5B32873568}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{B596C093-2802-421A-9217-93DC731610E8}"
+	ProjectSection(SolutionItems) = preProject
+		statestore.yaml = statestore.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
