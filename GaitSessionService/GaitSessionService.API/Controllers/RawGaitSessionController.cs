@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs.RawGaitData;
 
-namespace GaitSession.API.Controllers
+namespace GaitSessionService.API.Controllers
 {
     [ApiController]
     [Route("gaitsession")]

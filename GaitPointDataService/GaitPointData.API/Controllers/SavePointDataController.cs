@@ -25,7 +25,7 @@ namespace GaitPointData.API.Controllers
         {
             try
             {
-                Console.WriteLine($"📩 Received PointData save request for: {gaitDataKeys.FileName}");
+                Console.WriteLine($"SavePointDataController received save request for: {gaitDataKeys.FileName} - Published from GaitDataOrchestrator");
 
                 // GET: Kald PythonC3DReader for PointData
                 var createPointDataDTO = await _daprClient.InvokeMethodAsync<CreatePointDataDTO>(
@@ -45,15 +45,15 @@ namespace GaitPointData.API.Controllers
                 {
                     Service = "GaitPointDataService",
                     CorrelationId = gaitDataKeys.CorrelationId,
-                    Success = true
+                    Success = true,
                 });
 
-                Console.WriteLine($"✅ PointData from the C3D file: {gaitDataKeys.FileName} have successfully been saved");
+                Console.WriteLine($"Success! PointData from {gaitDataKeys.FileName} have been saved - MiniO key: {gaitDataKeys.CorrelationId}");
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Exception in 'HandleSavePointDataEvent' method: {ex.Message}");
+                Console.WriteLine($"EXCEPTION - HandleSavePointDataEvent failed trying to save '{gaitDataKeys.FileName}': {ex.Message}");
 
                 // Send fejlstatus tilbage til Orchestrator
                 await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO

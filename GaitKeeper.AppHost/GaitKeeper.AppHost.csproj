@@ -16,6 +16,7 @@
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.1.0" />
     <PackageReference Include="Aspire.Hosting.Python" Version="9.1.0" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.1.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Dapr" Version="9.3.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Redis.Extensions" Version="9.3.0" />
   </ItemGroup>
@@ -25,7 +26,7 @@
     <ProjectReference Include="..\GaitDataOrchestratorService\GaitDataOrchestrator.API\GaitDataOrchestrator.API.csproj" />
     <ProjectReference Include="..\GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj" />
     <ProjectReference Include="..\Gateway.API\Gateway.API.csproj" />
-    <ProjectReference Include="..\GaitSessionService\GaitSession.API\GaitSession.API.csproj" />
+    <ProjectReference Include="..\GaitSessionService\GaitSessionService.API\GaitSessionService.API.csproj" />
   </ItemGroup>
 
 </Project>

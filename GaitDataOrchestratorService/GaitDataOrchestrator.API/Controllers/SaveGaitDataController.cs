@@ -1,6 +1,7 @@
 ﻿using Dapr;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DTOs;
 using Shared.DTOs.PubSubDTOs;
 
 namespace GaitDataOrchestrator.API.Controllers
@@ -17,35 +18,37 @@ namespace GaitDataOrchestrator.API.Controllers
         }
 
         [HttpPost("post")]
-        public async Task<IActionResult> OrchestrarteSaveGaitData([FromBody] string fileName)
+        public async Task<IActionResult> OrchestrarteSaveGaitData([FromBody] CreateGaitSessionDTO gaitSessionDTO)
         {
             try
             {
-                Console.WriteLine($"📩 Received save request for: {fileName} -> Now orchestrating the process...");
+                Console.WriteLine($"SaveGaitDataController received save request for: {gaitSessionDTO.FileName} -> Now orchestrating the process...");
 
-                if (fileName == null)
+                if (gaitSessionDTO.FileName == null)
                     return BadRequest(new { error = "Invalid Gait Data request" });
 
                 // Orkestere processe med PubSub og RabbitMQ
                 var correlationId = Guid.NewGuid();
                 var message = new
                 {
-                    FileName = fileName,
-                    CorrelationId = correlationId
+                    FileName = gaitSessionDTO.FileName,
+                    CorrelationId = correlationId,
                 };
 
+                gaitSessionDTO.PointDataId = correlationId;
+
                 // Publish til RabbitMQ via Dapr PubSub
-                await _daprClient.PublishEventAsync("pubsub", "save-gait-session", message);
+                await _daprClient.PublishEventAsync("pubsub", "save-gait-session", gaitSessionDTO);
                 await _daprClient.PublishEventAsync("pubsub", "save-point-data", message);
                 // await _daprClient.PublishEventAsync("pubsub", "save-analog-data", message); Ikke implementeret, endnu...
 
-                Console.WriteLine($"✅ All events for {fileName} have successfully been published");
+                Console.WriteLine($"Success! All events for {gaitSessionDTO.FileName} have successfully been published");
 
-                return Ok(new { Message = $"Events er publiceret for: {message.FileName}" });
+                return Ok(new { Message = $"Saving...: {message.FileName}" });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Exception in 'OrchestrarteSaveGaitData' method: {ex.Message}");
+                Console.WriteLine($"EXCEPTION - OrchestrarteSaveGaitData: {ex.Message}");
 
                 return StatusCode(500, new { error = ex.Message });
             }
@@ -55,7 +58,7 @@ namespace GaitDataOrchestrator.API.Controllers
         [HttpPost("status")]
         public async Task<IActionResult> HandleSaveStatus([FromBody] SaveStatusDTO status)
         {
-            Console.WriteLine($"📩 Status received from: {status.Service}, Success: {status.Success}");
+            Console.WriteLine($"SaveGaitDataController received a Status from: {status.Service}, Success: {status.Success}");
 
             var correlationId = status.CorrelationId;
             var stateKey = $"status-{correlationId}";
@@ -75,13 +78,13 @@ namespace GaitDataOrchestrator.API.Controllers
             {
                 if (statuses.Any(x => !x.Success))
                 {
-                    Console.WriteLine($"❌ Failure detected – initier rollback for {correlationId}");
+                    Console.WriteLine($"Failure detected – initier rollback for {correlationId}");
 
                     await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", correlationId);
                 }
                 else
                 {
-                    Console.WriteLine($"✅ All saves succeeded for {correlationId} – GaitData saved!");
+                    Console.WriteLine($"Success! All saves succeeded for {correlationId} – GaitData saved!");
                 }
 
                 // 5. Ryd op – slet nøgle fra Redis

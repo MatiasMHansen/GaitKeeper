@@ -34,12 +34,16 @@ namespace GaitPointData.Application.Command
                 rGaitCycles: MapGaitCycles(dto.RGaitCycles)
             );
 
-            // Save (kommer senere)
+            // Save:
             await _storage.SaveAsync(pointData);
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            await _storage.DeleteAsync(id);
+        }
 
-        // Helper metoder
+        // ------------ Helper metoder -------------
         private List<Marker> MapMarkers(List<MarkerDTO> markerDtos)
         {
             if (markerDtos == null) return new();

@@ -26,25 +26,39 @@ namespace GaitPointData.Infrastructure
             var key = $"{pointData.Id}.json";
 
             // 2. Serialiser PointData til JSON
-            var json = JsonSerializer.Serialize(pointData, new JsonSerializerOptions
+            try
             {
-                WriteIndented = false,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+                var json = JsonSerializer.Serialize(pointData, new JsonSerializerOptions
+                {
+                    WriteIndented = false,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
 
-            // 3. Konvertér til stream
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+                // 3. Konvertér til stream
+                var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
-            // 4. Byg request
-            var putRequest = new PutObjectRequest
+                // 4. Byg request
+                var putRequest = new PutObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = key,
+                    InputStream = stream
+                };
+
+                // 5. Upload til MinIO
+                await _s3Client.PutObjectAsync(putRequest);
+
+            }
+            catch (AmazonS3Exception ex)
             {
-                BucketName = _bucketName,
-                Key = key,
-                InputStream = stream
-            };
-
-            // 5. Upload til MinIO
-            await _s3Client.PutObjectAsync(putRequest);
+                Console.WriteLine($"EXCEPTION - PointDataStorage: AmazonS3Exception while saving '{key}': {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EXCEPTION - PointDataStorage: General exception while saving '{key}': {ex.Message}");
+                throw;
+            }
         }
 
         public Task<PointData> LoadAsync(Guid id)
@@ -52,9 +66,31 @@ namespace GaitPointData.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // 1. Generér filnavnet baseret på ID
+            var key = $"{id}.json";
+
+            try
+            {
+                // 2. Byg og udfør delete-request
+                var deleteRequest = new DeleteObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = key
+                };
+
+                await _s3Client.DeleteObjectAsync(deleteRequest);
+            }
+            catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Console.WriteLine($"EXCEPTION - PointDataStorage tried to delete '{key}', but it was not found.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EXCEPTION - PointDataStorage error deleting '{key}': {ex.Message}");
+                throw;
+            }
         }
 
         public async Task EnsureBucketExistsAsync()

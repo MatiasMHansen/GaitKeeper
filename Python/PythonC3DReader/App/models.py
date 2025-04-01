@@ -37,6 +37,12 @@ class GaitSession(BaseModel): # Aggregate
     StartFrame: int
     EndFrame: int
     TotalFrames: int
+    AngleLabels: List[str]
+    ForceLabels: List[str]
+    ModeledLabels: List[str]
+    MomentLabels: List[str]
+    PowerLabels: List[str]
+    PointLabels: List[str]
     Biometrics: Biometrics
     SystemInfo: SystemInfo
     LGaitCycles: List[GaitCycle]

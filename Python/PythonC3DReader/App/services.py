@@ -82,7 +82,7 @@ class C3DParserService(IC3DParserService):
             end_frame = round(end_event["time"] * freq)
             duration = round(end_event["time"] - start_event["time"], 3)
 
-            # GaitCycle DTO
+            # GaitCycle
             gait_cycles.append(GaitCycle(
                 Name=f"{start_event['context']} {start_event['label']}",
                 Description=start_event["description"],
@@ -98,13 +98,39 @@ class C3DParserService(IC3DParserService):
 
     # Metode til at hente metadata fra C3D-filen
     def get_gait_session(self, file_name: str) -> dict:
-        # Load & setup
+         # Load & setup
         c3d = self._load_c3d_file(file_name)
         parameters = c3d['parameters']
 
-        # Check GaitAnalysis
-        analysis_exists = self._fetch_list(parameters, 'ANALYSIS', 'USED')
+        # Hent generelle metadata
+        subject_id = self._fetch_value(parameters, 'SUBJECTS', 'NAMES')
+        point_freq = self._fetch_value(parameters, 'POINT', 'RATE')
+        analog_freq = self._fetch_value(parameters, 'ANALOG', 'RATE')
+        start_frame = self._fetch_value(parameters, 'TRIAL', 'ACTUAL_START_FIELD')
+        end_frame = self._fetch_value(parameters, 'TRIAL', 'ACTUAL_END_FIELD')
+        total_frames = end_frame - start_frame + 1
+
+        # Hent alle labels
+        all_labels = self._fetch_list(parameters, 'POINT', 'LABELS')
+
+        # Hent labels for hver type
+        angle_labels = self._fetch_list(parameters, 'POINT', 'ANGLES')
+        force_labels = self._fetch_list(parameters, 'POINT', 'FORCES')
+        modeled_labels = self._fetch_list(parameters, 'POINT', 'MODELED_MARKERS')
+        moment_labels = self._fetch_list(parameters, 'POINT', 'MOMENTS')
+        power_labels = self._fetch_list(parameters, 'POINT', 'POWERS')
+
+        # Filtrér PointLabels (fjern specialiserede labels)
+        special_labels = set(angle_labels + force_labels + modeled_labels + moment_labels + power_labels)
+        point_labels = [label for label in all_labels if label not in special_labels]
+
+        # GaitCycles
+        left_gait_cycles = self._create_gait_cycle_list(parameters, context="Left")
+        right_gait_cycles = self._create_gait_cycle_list(parameters, context="Right")
+
+        # Check GaitAnalyses & hent data
         gait_analysis_list = None
+        analysis_exists = self._fetch_list(parameters, 'ANALYSIS', 'USED')
 
         if analysis_exists[0] > 0:
             names = self._fetch_list(parameters, 'ANALYSIS', 'NAMES')
@@ -124,34 +150,37 @@ class C3DParserService(IC3DParserService):
                 for i in range(len(names))
             ]
 
-        # Saml GaitSession
+        # Byg GaitSession DTO
         gait_session = GaitSession(
             FileName=file_name,
-            SubjectId=self._fetch_value(parameters, 'SUBJECTS', 'NAMES'),
-            PointFreq=self._fetch_value(parameters, 'POINT', 'RATE'),
-            AnalogFreq=self._fetch_value(parameters, 'ANALOG', 'RATE'),
-            StartFrame=self._fetch_value(parameters, 'TRIAL', 'ACTUAL_START_FIELD'),
-            EndFrame=self._fetch_value(parameters, 'TRIAL', 'ACTUAL_END_FIELD'),
-            TotalFrames=self._fetch_value(parameters, 'TRIAL', 'ACTUAL_END_FIELD') - self._fetch_value(parameters, 'TRIAL', 'ACTUAL_START_FIELD') + 1,
-
+            SubjectId=subject_id,
+            PointFreq=point_freq,
+            AnalogFreq=analog_freq,
+            StartFrame=start_frame,
+            EndFrame=end_frame,
+            TotalFrames=total_frames,
+            PointLabels=point_labels,
+            AngleLabels=angle_labels,
+            ForceLabels=force_labels,
+            ModeledLabels=modeled_labels,
+            MomentLabels=moment_labels,
+            PowerLabels=power_labels,
             Biometrics=Biometrics(
                 Height=self._fetch_value(parameters, 'PROCESSING', 'Height'),
                 Weight=self._fetch_value(parameters, 'PROCESSING', 'Bodymass'),
                 LLegLength=self._fetch_value(parameters, 'PROCESSING', 'LLegLength'),
                 RLegLength=self._fetch_value(parameters, 'PROCESSING', 'RLegLength')
             ),
-
             SystemInfo=SystemInfo(
                 Software=self._fetch_value(parameters, 'MANUFACTURER', 'SOFTWARE'),
                 Version=self._fetch_value(parameters, 'MANUFACTURER', 'VERSION_LABEL'),
                 MarkerSetup=self._fetch_value(parameters, 'SUBJECTS', 'MARKER_SETS')
             ),
-
-            GaitAnalyses=gait_analysis_list,
-            LGaitCycles=self._create_gait_cycle_list(parameters, context="Left"),
-            RGaitCycles=self._create_gait_cycle_list(parameters, context="Right")
+            LGaitCycles=left_gait_cycles,
+            RGaitCycles=right_gait_cycles,
+            GaitAnalyses=gait_analysis_list
         )
-        # Return som dict
+
         return gait_session.model_dump()
         
     # Metode til at hente punktdata fra C3D-filen

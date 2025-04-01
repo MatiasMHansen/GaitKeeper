@@ -16,6 +16,13 @@ var minio = builder.AddContainer("minio", "minio/minio", "latest")
     .WithHttpEndpoint(name: "web", port: 9000, targetPort: 9000)       // MinIO API
     .WithHttpEndpoint(name: "console", port: 9001, targetPort: 9001);   // MinIO UI
 
+var sqlPassword = builder.AddParameter("sql-password", secret: true);
+
+var sqlServer = builder.AddSqlServer("GaitkeeperSql", password: sqlPassword)
+    .WithDataVolume();
+
+var sqlDatebase = sqlServer.AddDatabase("GaitkeeperDB");
+
 builder.AddProject<Projects.Gateway_API>("gateway-api")
     .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
@@ -24,8 +31,10 @@ builder.AddProject<Projects.Gateway_API>("gateway-api")
         DaprHttpPort = 3500
     });
 
-builder.AddProject<Projects.GaitSession_API>("gaitsession-api")
+builder.AddProject<Projects.GaitSessionService_API>("gaitsession-api")
     .WithReference(rabbitMq)
+    .WithReference(sqlDatebase)
+    .WaitFor(sqlServer)
     .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions 
     { 

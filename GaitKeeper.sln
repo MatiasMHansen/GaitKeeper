@@ -11,19 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GaitSessionService", "GaitS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GaitPointDataService", "GaitPointDataService", "{482957CB-6AFE-4A3C-BAA4-2B766F0343C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.API", "GaitSessionService\GaitSession.API\GaitSession.API.csproj", "{13AF559C-9DEE-055B-40F5-89F094710283}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitPointData.API", "GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj", "{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.AppHost", "GaitKeeper.AppHost\GaitKeeper.AppHost.csproj", "{2FAEFB2D-E6EA-4B47-855C-482F3D1ADFB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitKeeper.ServiceDefaults", "GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj", "{C5A45DCC-F8DC-632F-C6CB-EC7C7FD053B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Application", "GaitSessionService\GaitSession.Application\GaitSession.Application.csproj", "{D213C35D-51ED-4920-A4FE-DCC81C3A52C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.Application", "GaitSessionService\GaitSessionService.Application\GaitSessionService.Application.csproj", "{D213C35D-51ED-4920-A4FE-DCC81C3A52C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Domain", "GaitSessionService\GaitSession.Domain\GaitSession.Domain.csproj", "{DE11B50C-128F-4381-9C8B-FFCE2921B40D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSession.Infrastructure", "GaitSessionService\GaitSession.Infrastructure\GaitSession.Infrastructure.csproj", "{0043DD7F-C479-42DA-BE09-44E830DADE22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.Domain", "GaitSessionService\GaitSessionService.Domain\GaitSessionService.Domain.csproj", "{DE11B50C-128F-4381-9C8B-FFCE2921B40D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlazorFrontend", "BlazorFrontend", "{C1B60C86-D71D-4DAB-9BE8-98A05027D306}"
 EndProject
@@ -52,6 +48,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", 
 		statestore.yaml = statestore.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.Infrastructure", "GaitSessionService\GaitSessionService.Infrastructure\GaitSessionService.Infrastructure.csproj", "{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.DatabaseMigration", "GaitSessionService\GaitSessionService.DatabaseMigration\GaitSessionService.DatabaseMigration.csproj", "{67266CF7-0CFD-49BB-F416-B3E92F116089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.API", "GaitSessionService\GaitSessionService.API\GaitSessionService.API.csproj", "{9DB786B2-B353-1B30-A36A-1C56409A6260}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +62,6 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF4108ED-9B30-4402-A929-34FF87C65F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF4108ED-9B30-4402-A929-34FF87C65F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13AF559C-9DEE-055B-40F5-89F094710283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13AF559C-9DEE-055B-40F5-89F094710283}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13AF559C-9DEE-055B-40F5-89F094710283}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13AF559C-9DEE-055B-40F5-89F094710283}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,10 +82,6 @@ Global
 		{DE11B50C-128F-4381-9C8B-FFCE2921B40D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE11B50C-128F-4381-9C8B-FFCE2921B40D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE11B50C-128F-4381-9C8B-FFCE2921B40D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0043DD7F-C479-42DA-BE09-44E830DADE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0043DD7F-C479-42DA-BE09-44E830DADE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0043DD7F-C479-42DA-BE09-44E830DADE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0043DD7F-C479-42DA-BE09-44E830DADE22}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6CAFF423-3B9F-44DC-9BBD-E92BD161F5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6CAFF423-3B9F-44DC-9BBD-E92BD161F5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CAFF423-3B9F-44DC-9BBD-E92BD161F5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -116,25 +110,38 @@ Global
 		{CDB8C502-6AA1-4342-BD44-1B5B32873568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDB8C502-6AA1-4342-BD44-1B5B32873568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDB8C502-6AA1-4342-BD44-1B5B32873568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67266CF7-0CFD-49BB-F416-B3E92F116089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67266CF7-0CFD-49BB-F416-B3E92F116089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67266CF7-0CFD-49BB-F416-B3E92F116089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67266CF7-0CFD-49BB-F416-B3E92F116089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EF4108ED-9B30-4402-A929-34FF87C65F17} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{13AF559C-9DEE-055B-40F5-89F094710283} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 		{D1116BE2-0652-CC6A-0BF9-982DBEE7C9DE} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
 		{2FAEFB2D-E6EA-4B47-855C-482F3D1ADFB9} = {DC8F1005-3B0F-4468-BE73-3C8336DC4C4A}
 		{C5A45DCC-F8DC-632F-C6CB-EC7C7FD053B5} = {DC8F1005-3B0F-4468-BE73-3C8336DC4C4A}
 		{D213C35D-51ED-4920-A4FE-DCC81C3A52C4} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 		{DE11B50C-128F-4381-9C8B-FFCE2921B40D} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
-		{0043DD7F-C479-42DA-BE09-44E830DADE22} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 		{6CAFF423-3B9F-44DC-9BBD-E92BD161F5D1} = {C1B60C86-D71D-4DAB-9BE8-98A05027D306}
 		{E2943E27-CDA3-4C60-8759-B3D98CD904A4} = {7A754853-594A-438C-BA7F-228D59DBEBE3}
 		{FF7803F9-6527-198B-445A-AA96E62005F0} = {C1794AF0-4BA2-44BB-B3FC-BF75CD612EF7}
 		{AD88B395-465D-495B-BA3E-E5BF045B6357} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
 		{A55C4486-1BF8-4E53-93D5-0886F1B3F614} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
 		{CDB8C502-6AA1-4342-BD44-1B5B32873568} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
+		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
+		{67266CF7-0CFD-49BB-F416-B3E92F116089} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
+		{9DB786B2-B353-1B30-A36A-1C56409A6260} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BDD8726-2145-41C1-9AFD-38417F8999E8}
