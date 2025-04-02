@@ -7,16 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.AddSqlServerDbContext<GaitSessionContext>("GaitkeeperDB"); 
-//, options => options.MigrationsAssembly("GaitSessionService.DatabaseMigration"));
-//(builder.Configuration.GetConnectionString("GaitSessionService"));
+builder.AddSqlServerDbContext<GaitSessionContext>("GaitkeeperDB"); // Skal muligvis være før "AddServiceDefaults"
 
 builder.AddServiceDefaults();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers().AddDapr();
 

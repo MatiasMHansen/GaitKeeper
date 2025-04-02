@@ -3,11 +3,6 @@ using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var rabbitMq = builder.AddRabbitMQ("rabbitmq")
-    .WithManagementPlugin();
-
-var redis = builder.AddRedis("redis", port: 6379);
-
 var minio = builder.AddContainer("minio", "minio/minio", "latest")
     .WithEnvironment("MINIO_ACCESS_KEY", "admin")
     .WithEnvironment("MINIO_SECRET_KEY", "adminadmin")
@@ -24,42 +19,38 @@ var sqlServer = builder.AddSqlServer("GaitkeeperSql", password: sqlPassword)
 var sqlDatebase = sqlServer.AddDatabase("GaitkeeperDB");
 
 builder.AddProject<Projects.Gateway_API>("gateway-api")
-    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gateway",
         DaprHttpPort = 3500
-    });
+    })
+    .WaitFor(minio);
 
 builder.AddProject<Projects.GaitSessionService_API>("gaitsession-api")
-    .WithReference(rabbitMq)
     .WithReference(sqlDatebase)
-    .WaitFor(sqlServer)
-    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
         AppId = "gaitsessionservice",
         DaprHttpPort = 3501
-    });
+    })
+    .WaitFor(sqlServer)
+    .WaitFor(minio);
 
 builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
-    .WithReference(rabbitMq)
-    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gaitpointdataservice",
         DaprHttpPort = 3502
-    });
+    })
+    .WaitFor(minio);
 
 builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api")
-    .WithReference(rabbitMq)
-    .WithReference(redis)
-    .WaitFor(minio)
     .WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "gaitdataorchestratorservice",
         DaprHttpPort = 3503
-    });
+    })
+    .WaitFor(minio);
 
 #pragma warning disable ASPIREHOSTINGPYTHON001
 var pythonApp = builder.AddPythonApp(
@@ -70,12 +61,12 @@ var pythonApp = builder.AddPythonApp(
 )
 #pragma warning restore ASPIREHOSTINGPYTHON001
 .WithHttpEndpoint(env: "PORT") // Matcher porten i main.py
-.WaitFor(minio)
 .WithDaprSidecar(new DaprSidecarOptions
 {
     AppId = "c3dreader",
     DaprHttpPort = 3504
-});
+})
+.WaitFor(minio);
 
 // Sæt debug-mode, hvis app’en kører i udvikling
 if (builder.ExecutionContext.IsRunMode && builder.Environment.IsDevelopment())
