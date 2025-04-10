@@ -13,11 +13,13 @@ namespace GaitPointData.API.Controllers
     {
         private readonly DaprClient _daprClient;
         private readonly IPointDataCommand _pointDataCommand;
+        private readonly ILogger<SavePointDataController> _log;
 
-        public SavePointDataController(DaprClient daprClient, IPointDataCommand pointDataCommand)
+        public SavePointDataController(DaprClient daprClient, IPointDataCommand pointDataCommand, ILogger<SavePointDataController> logger)
         {
             _daprClient = daprClient;
             _pointDataCommand = pointDataCommand;
+            _log = logger;
         }
 
         [Topic("pubsub", "save-point-data")]
@@ -25,7 +27,7 @@ namespace GaitPointData.API.Controllers
         {
             try
             {
-                Console.WriteLine($"SavePointDataController received save request for: {gaitDataKeys.FileName} - Published from GaitDataOrchestrator");
+                _log.LogInformation($"SavePointDataController received save request for: {gaitDataKeys.FileName} - Published from GaitDataOrchestrator");
 
                 // GET: Kald PythonC3DReader for PointData
                 var createPointDataDTO = await _daprClient.InvokeMethodAsync<CreatePointDataDTO>(
@@ -48,13 +50,12 @@ namespace GaitPointData.API.Controllers
                     Success = true,
                 });
 
-                Console.WriteLine($"Success! PointData from {gaitDataKeys.FileName} have been saved - MiniO key: {gaitDataKeys.CorrelationId}");
+                _log.LogInformation($"The successful save-status for {gaitDataKeys.CorrelationId} is published");
+                
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - HandleSavePointDataEvent failed trying to save '{gaitDataKeys.FileName}': {ex.Message}");
-
                 // Send fejlstatus tilbage til Orchestrator
                 await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
                 {
@@ -63,6 +64,8 @@ namespace GaitPointData.API.Controllers
                     Success = false,
                     ErrorMessage = ex.Message
                 });
+
+                _log.LogWarning($"The failed save-status for {gaitDataKeys.CorrelationId} is published");
 
                 return StatusCode(500);
             }

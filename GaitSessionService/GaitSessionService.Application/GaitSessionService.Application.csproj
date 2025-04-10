@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Query\QueryDTOs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GaitSessionService.Domain\GaitSessionService.Domain.csproj" />
   </ItemGroup>
 

@@ -49,9 +49,9 @@ namespace GaitSessionService.Application.Command
             await _repo.SaveAsync(gaitSession);
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid pointDataId)
         {
-            throw new NotImplementedException();
+            await _repo.DeleteAsync(pointDataId);
         }
 
         // ------------ Helper metoder -------------

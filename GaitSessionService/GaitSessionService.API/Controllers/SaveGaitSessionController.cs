@@ -3,6 +3,7 @@ using Dapr.Client;
 using GaitSessionService.Application.Command;
 using GaitSessionService.Application.Command.CommandDTOs;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry;
 using Shared.DTOs.PubSubDTOs;
 
 namespace GaitSessionService.API.Controllers
@@ -13,11 +14,13 @@ namespace GaitSessionService.API.Controllers
     {
         private readonly DaprClient _daprClient;
         private readonly IGaitSessionCommand _gaitSessionCommand;
+        private readonly ILogger<SaveGaitSessionController> _log;
 
-        public SaveGaitSessionController(DaprClient daprClient, IGaitSessionCommand gaitSessionCommand)
+        public SaveGaitSessionController(DaprClient daprClient, IGaitSessionCommand gaitSessionCommand, ILogger<SaveGaitSessionController> logger)
         {
             _daprClient = daprClient;
             _gaitSessionCommand = gaitSessionCommand;
+            _log = logger;
         }
 
         [Topic("pubsub", "save-gait-session")]
@@ -25,8 +28,7 @@ namespace GaitSessionService.API.Controllers
         {
             try
             {
-                Console.WriteLine($"SaveGaitSessionController received save request for: {gaitSessionDTO.FileName} - Published from GaitDataOrchestrator");
-
+                _log.LogInformation($"SaveGaitSessionController received save request for: {gaitSessionDTO.FileName} - Published from GaitDataOrchestrator");
 
                 // TODO: Kald IGaitSessionCommand
                 await _gaitSessionCommand.CreateAsync(gaitSessionDTO);
@@ -39,13 +41,12 @@ namespace GaitSessionService.API.Controllers
                     Success = true,
                 });
 
-                Console.WriteLine($"Success! GaitSession from {gaitSessionDTO.FileName} have been saved - SQL key: xxxxx");
+                _log.LogWarning($"The successful save-status for {gaitSessionDTO.PointDataId} is published");
+
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - HandleSaveGaitSessionEvent failed trying to save '{gaitSessionDTO.FileName}': {ex.Message}");
-
                 // Send fejlstatus tilbage til Orchestrator
                 await _daprClient.PublishEventAsync("pubsub", "save-status", new SaveStatusDTO
                 {
@@ -54,6 +55,8 @@ namespace GaitSessionService.API.Controllers
                     Success = false,
                     ErrorMessage = ex.Message
                 });
+
+                _log.LogWarning($"The failed save-status for {gaitSessionDTO.PointDataId} is published");
 
                 return StatusCode(500);
             }

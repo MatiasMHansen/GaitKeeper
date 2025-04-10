@@ -44,7 +44,7 @@ app.MapGet("/", () => "Hello from GaitSessionService");
 app.MapPost("/gaitsession/post", async([FromBody] CreateGaitSessionDTO dto, [FromServices] IGaitSessionCommand command) 
         => await command.CreateAsync(dto));
 
-app.MapDelete("/gaitsession/delete/{id}", async (Guid pointDataId, [FromServices] IGaitSessionCommand command)
+app.MapDelete("/gaitsession/delete/{pointDataId}", async (Guid pointDataId, [FromServices] IGaitSessionCommand command)
         => await command.DeleteAsync(pointDataId));
 
 app.Run();

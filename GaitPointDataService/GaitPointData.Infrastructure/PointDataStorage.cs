@@ -1,8 +1,10 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime.Internal.Util;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
 using GaitPointData.Application;
 using GaitPointData.Domain.Aggregate;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
@@ -13,11 +15,13 @@ namespace GaitPointData.Infrastructure
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
+        private readonly ILogger<PointDataStorage> _log;
 
-        public PointDataStorage(IAmazonS3 s3Client, IOptions<MinioOptions> options)
+        public PointDataStorage(IAmazonS3 s3Client, IOptions<MinioOptions> options, ILogger<PointDataStorage> logger)
         {
             _s3Client = s3Client;
             _bucketName = options.Value.Bucket;
+            _log = logger;
         }
 
         public async Task SaveAsync(PointData pointData)
@@ -47,17 +51,16 @@ namespace GaitPointData.Infrastructure
 
                 // 5. Upload til MinIO
                 await _s3Client.PutObjectAsync(putRequest);
+                _log.LogInformation($"Success! - PointData: '{key}' saved to bucket '{_bucketName}'");
 
             }
             catch (AmazonS3Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - PointDataStorage: AmazonS3Exception while saving '{key}': {ex.Message}");
-                throw;
+                _log.LogError($"EXCEPTION - PointDataStorage: AmazonS3Exception while saving '{key}': {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - PointDataStorage: General exception while saving '{key}': {ex.Message}");
-                throw;
+                _log.LogError($"EXCEPTION - PointDataStorage: General exception while saving '{key}': {ex.Message}");
             }
         }
 
@@ -81,15 +84,15 @@ namespace GaitPointData.Infrastructure
                 };
 
                 await _s3Client.DeleteObjectAsync(deleteRequest);
+                _log.LogInformation($"Success! - PointData: '{key}' deleted from bucket '{_bucketName}'");
             }
             catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Console.WriteLine($"EXCEPTION - PointDataStorage tried to delete '{key}', but it was not found.");
+                _log.LogError($"EXCEPTION - PointDataStorage tried to delete '{key}', but it was not found.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - PointDataStorage error deleting '{key}': {ex.Message}");
-                throw;
+                _log.LogError($"EXCEPTION - PointDataStorage error deleting '{key}': {ex.Message}");
             }
         }
 

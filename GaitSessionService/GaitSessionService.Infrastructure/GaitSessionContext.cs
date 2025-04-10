@@ -1,6 +1,7 @@
 ﻿using GaitSessionService.Domain.Aggregate;
 using GaitSessionService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace GaitSessionService.Infrastructure
 {
@@ -20,6 +21,7 @@ namespace GaitSessionService.Infrastructure
             modelBuilder.Entity<GaitSession>(builder =>
             {
                 builder.HasKey(gs => gs.Id);
+                builder.HasIndex(gs => gs.PointDataId).IsUnique(); // Unik constraint på PointDataId
 
                 // Owned types
                 builder.OwnsOne(gs => gs.Biometrics, b =>
@@ -37,61 +39,56 @@ namespace GaitSessionService.Infrastructure
                     s.Property(p => p.MarkerSetup);
                 });
 
-                // Primitive collections
-                builder.OwnsMany<string>("_angleLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("AngleLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                // Primitive collections - Gemmer som JSON
+                builder.Property(gs => gs.AngleLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
-                builder.OwnsMany<string>("_forceLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("ForceLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                builder.Property(gs => gs.ForceLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
-                builder.OwnsMany<string>("_modeledLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("ModeledLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                builder.Property(gs => gs.ModeledLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
-                builder.OwnsMany<string>("_momentLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("MomentLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                builder.Property(gs => gs.MomentLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
-                builder.OwnsMany<string>("_powerLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("PowerLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                builder.Property(gs => gs.PowerLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
-                builder.OwnsMany<string>("_pointLabels", a =>
-                {
-                    a.WithOwner().HasForeignKey("GaitSessionId");
-                    a.Property<string>("Value");
-                    a.ToTable("PointLabels");
-                    a.HasKey("GaitSessionId", "Value");
-                });
+                builder.Property(gs => gs.PointLabels)
+                    .HasColumnType("nvarchar(max)")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                    );
 
                 // Collections af komplekse typer
                 builder.OwnsMany(gs => gs.LGaitCycles, a =>
                 {
                     a.WithOwner().HasForeignKey("GaitSessionId");
                     a.ToTable("LGaitCycles");
-                    a.HasKey("GaitSessionId", "Number"); // Antag 'Number' er unik pr. session
+                    a.HasKey("GaitSessionId", "Number"); // Composite PK
+                    a.Property(p => p.Number).ValueGeneratedNever(); // Undgå identity
                 });
 
                 builder.OwnsMany(gs => gs.RGaitCycles, a =>
@@ -99,13 +96,14 @@ namespace GaitSessionService.Infrastructure
                     a.WithOwner().HasForeignKey("GaitSessionId");
                     a.ToTable("RGaitCycles");
                     a.HasKey("GaitSessionId", "Number");
+                    a.Property(p => p.Number).ValueGeneratedNever();
                 });
 
                 builder.OwnsMany(gs => gs.GaitAnalyses, a =>
                 {
                     a.WithOwner().HasForeignKey("GaitSessionId");
                     a.ToTable("GaitAnalyses");
-                    a.HasKey("GaitSessionId", "Name"); // Antag 'Name' er unik pr. session
+                    a.HasKey("GaitSessionId","Context","Name");
                 });
             });
         }

@@ -6,7 +6,7 @@ namespace GaitPointData.API.Controllers
 {
     [ApiController]
     [Route("pointdata")]
-    public class RawPointDataController : ControllerBase
+    public class RawPointDataController : ControllerBase // FORÆLDET????? 
     {
         private readonly DaprClient _daprClient;
 

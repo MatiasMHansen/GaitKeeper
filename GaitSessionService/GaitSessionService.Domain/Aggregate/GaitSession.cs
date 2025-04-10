@@ -21,12 +21,12 @@ namespace GaitSessionService.Domain.Aggregate
         // Value Objects
         public Biometrics Biometrics { get; private set; }
         public SystemInfo SystemInfo { get; private set; }
-        public IReadOnlyCollection<string> AngleLabels => _angleLabels;
-        public IReadOnlyCollection<string> ForceLabels => _forceLabels;
-        public IReadOnlyCollection<string> ModeledLabels => _modeledLabels;
-        public IReadOnlyCollection<string> MomentLabels => _momentLabels;
-        public IReadOnlyCollection<string> PowerLabels => _powerLabels;
-        public IReadOnlyCollection<string> PointLabels => _pointLabels;
+        public List<string> AngleLabels => _angleLabels;
+        public List<string> ForceLabels => _forceLabels;
+        public List<string> ModeledLabels => _modeledLabels;
+        public List<string> MomentLabels => _momentLabels;
+        public List<string> PowerLabels => _powerLabels;
+        public List<string> PointLabels => _pointLabels;
         public IReadOnlyCollection<GaitCycle> LGaitCycles => _lGaitCycles;
         public IReadOnlyCollection<GaitCycle> RGaitCycles => _rGaitCycles;
         public IReadOnlyCollection<GaitAnalysis> GaitAnalyses => _gaitAnalyses;

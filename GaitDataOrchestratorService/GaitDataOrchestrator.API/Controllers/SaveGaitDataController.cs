@@ -11,10 +11,12 @@ namespace GaitDataOrchestrator.API.Controllers
     public class SaveGaitDataController : ControllerBase
     {
         private readonly DaprClient _daprClient;
+        private readonly ILogger<SaveGaitDataController> _log;
 
-        public SaveGaitDataController(DaprClient daprClient)
+        public SaveGaitDataController(DaprClient daprClient, ILogger<SaveGaitDataController> logger)
         {
             _daprClient = daprClient;
+            _log = logger;
         }
 
         [HttpPost("post")]
@@ -22,7 +24,7 @@ namespace GaitDataOrchestrator.API.Controllers
         {
             try
             {
-                Console.WriteLine($"SaveGaitDataController received save request for: {gaitSessionDTO.FileName} -> Now orchestrating the process...");
+                _log.LogInformation($"SaveGaitDataController received save request for: {gaitSessionDTO.FileName} -> Now orchestrating the process...");
 
                 if (gaitSessionDTO.FileName == null)
                     return BadRequest(new { error = "Invalid Gait Data request" });
@@ -42,13 +44,13 @@ namespace GaitDataOrchestrator.API.Controllers
                 await _daprClient.PublishEventAsync("pubsub", "save-point-data", message);
                 // await _daprClient.PublishEventAsync("pubsub", "save-analog-data", message); Ikke implementeret, endnu...
 
-                Console.WriteLine($"Success! All events for {gaitSessionDTO.FileName} have successfully been published");
+                _log.LogInformation($"Success! All events for {gaitSessionDTO.FileName} have successfully been published -> Id:{correlationId}");
 
                 return Ok(new { Message = $"Saving...: {message.FileName}" });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EXCEPTION - OrchestrarteSaveGaitData: {ex.Message}");
+            _log.LogError($"EXCEPTION - OrchestrarteSaveGaitData: {ex.Message}");
 
                 return StatusCode(500, new { error = ex.Message });
             }
@@ -58,7 +60,7 @@ namespace GaitDataOrchestrator.API.Controllers
         [HttpPost("status")]
         public async Task<IActionResult> HandleSaveStatus([FromBody] SaveStatusDTO status)
         {
-            Console.WriteLine($"SaveGaitDataController received a Status from: {status.Service}, Success: {status.Success}");
+            _log.LogInformation($"SaveGaitDataController received a Status from: {status.Service} regarding {status.CorrelationId}, Success: {status.Success}");
 
             var correlationId = status.CorrelationId;
             var stateKey = $"status-{correlationId}";
@@ -78,13 +80,13 @@ namespace GaitDataOrchestrator.API.Controllers
             {
                 if (statuses.Any(x => !x.Success))
                 {
-                    Console.WriteLine($"Failure detected – initier rollback for {correlationId}");
+                    _log.LogWarning($"WARNING - Failure detected, initiate rollback for {correlationId}");
 
                     await _daprClient.PublishEventAsync("pubsub", "rollback-gaitdata", correlationId);
                 }
                 else
                 {
-                    Console.WriteLine($"Success! All saves succeeded for {correlationId} – GaitData saved!");
+                    _log.LogInformation($"Success! All saves succeeded for {correlationId} – GaitData saved!");
                 }
 
                 // 5. Ryd op – slet nøgle fra Redis
