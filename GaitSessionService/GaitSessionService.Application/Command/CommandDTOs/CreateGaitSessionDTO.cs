@@ -2,13 +2,13 @@
 {
     public class CreateGaitSessionDTO // Duplikeret i SharedKernel/Shared.DTOs/CreateGaitSessionDTO.cs
     {
+        public Guid? PointDataId { get; set; }
         // Tilføjet af brugeren i UI
         public string Description { get; set; }
         public string Sex { get; set; }
         public int Age { get; set; }
 
         // Tilføjet i PythonC3DReader
-        public Guid? PointDataId { get; set; }
         public string FileName { get; set; }
         public string SubjectId { get; set; }
         public float PointFreq { get; set; }

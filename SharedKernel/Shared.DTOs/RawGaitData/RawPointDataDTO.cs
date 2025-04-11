@@ -1,34 +1,47 @@
 ﻿namespace Shared.DTOs.RawGaitData
 {
-    public class RawPointDataDTO // Aggregate
+    public class RawPointDataDTO // Aggregate - NÆSTEN (intet Id) Identisk med 'GaitPointData.Application.Command.CommandDTOs' 
     {
+        public Guid Id { get; set; }
+        public string FileName { get; set; }
+        public string SubjectId { get; set; }
+        public double PointFreq { get; set; }
         public int StartFrame { get; set; }
         public int EndFrame { get; set; }
-        public double PointFreq { get; set; }
-        public List<string> AllLabels { get; set; } = new List<string>();
-        public List<MarkerDTO> Markers { get; set; } = new List<MarkerDTO>();
-        public GaitEventsDTO GaitEvents { get; set; } = new GaitEventsDTO();
+        public int TotalFrames { get; set; }
+        public List<MarkerDTO> PointMarkers { get; set; }
+        public List<MarkerDTO> AngleMarkers { get; set; }
+        public List<MarkerDTO> ForceMarkers { get; set; }
+        public List<MarkerDTO> ModeledMarkers { get; set; }
+        public List<MarkerDTO> MomentMarkers { get; set; }
+        public List<MarkerDTO> PowerMarkers { get; set; }
+        public List<GaitCycleDTO> LGaitCycles { get; set; }
+        public List<GaitCycleDTO> RGaitCycles { get; set; }
     }
 
-    public class GaitEventsDTO
-    {
-        public List<string> Label { get; set; } = new List<string>();
-        public List<string> Context { get; set; } = new List<string>();
-        public List<string> Description { get; set; } = new List<string>();
-        public List<double> Time { get; set; } = new List<double>();
-    }
+    //public class GaitCycleDTO
+    //{
+    //    public string Name { get; set; }
+    //    public string Description { get; set; }
+    //    public int Number { get; set; }
+    //    public double EventStart { get; set; }
+    //    public double EventEnd { get; set; }
+    //    public double Duration { get; set; }
+    //    public int StartFrame { get; set; }
+    //    public int EndFrame { get; set; }
+    //}
 
     public class MarkerDTO
     {
         public string Label { get; set; }
         public string UnitType { get; set; }
-        public List<UnitDTO> Units { get; set; } = new List<UnitDTO>();
+        public List<UnitDTO> Units { get; set; }
     }
 
     public class UnitDTO
     {
-        public double? X { get; set; }
-        public double? Y { get; set; }
-        public double? Z { get; set; }
+        public float? X { get; set; }
+        public float? Y { get; set; }
+        public float? Z { get; set; }
     }
 }

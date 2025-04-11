@@ -1,6 +1,6 @@
 ﻿namespace GaitPointData.Application.Command.CommandDTOs
 {
-    public class CreatePointDataDTO // ArrgegateRoot
+    public class CreatePointDataDTO // Aggregate - Identisk med 'Shared.DTOs.RawGaitData'
     {
         public Guid Id { get; set; }
         public string FileName { get; set; }

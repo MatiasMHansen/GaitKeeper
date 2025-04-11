@@ -2,9 +2,7 @@
 using GaitSessionService.Application.Query;
 using GaitSessionService.Infrastructure.Query;
 using GaitSessionService.Infrastructure.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 
 namespace GaitSessionService.Infrastructure
 {

@@ -6,7 +6,7 @@ namespace GaitSessionService.API.Controllers
 {
     [ApiController]
     [Route("gaitsession")]
-    public class RawGaitSessionController : ControllerBase // FORÆLDET?????
+    public class RawGaitSessionController : ControllerBase
     {
         private readonly DaprClient _daprClient;
 
