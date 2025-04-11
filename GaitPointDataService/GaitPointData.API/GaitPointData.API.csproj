@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e873674c-a59b-4687-93a6-a9e6e4f1a82c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapr.AspNetCore" Version="1.14.0" />
+    <PackageReference Include="Dapr.Client" Version="1.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GaitKeeper.ServiceDefaults\GaitKeeper.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\SharedKernel\Shared.DTOs\Shared.DTOs.csproj" />
+    <ProjectReference Include="..\GaitPointData.Application\GaitPointData.Application.csproj" />
+    <ProjectReference Include="..\GaitPointData.Infrastructure\GaitPointData.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

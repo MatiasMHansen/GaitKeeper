@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>1294d8dd-b979-4497-95e8-cf777c54550f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.Python" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.1.0" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.Dapr" Version="9.3.0" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.Redis.Extensions" Version="9.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorFrontend\GaitKeeper.WebAssembly\GaitKeeper.WebAssembly.csproj" />
+    <ProjectReference Include="..\GaitDataOrchestratorService\GaitDataOrchestrator.API\GaitDataOrchestrator.API.csproj" />
+    <ProjectReference Include="..\GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj" />
+    <ProjectReference Include="..\Gateway.API\Gateway.API.csproj" />
+    <ProjectReference Include="..\GaitSessionService\GaitSessionService.API\GaitSessionService.API.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+@Gateway.API_HostAddress = http://localhost:5207
+
+GET {{Gateway.API_HostAddress}}/
+Accept: application/json
+
+### Flow: Gateway -> SubjectServce -> PythonC3DReader 
+### c3d filer til test: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d"
+GET {{Gateway.API_HostAddress}}/gateway/gaitsesion/raw/Walk_Comfortable1.c3d
+Accept: application/json
+
+GET {{Gateway.API_HostAddress}}/gateway/pointdata/raw/Walk_Comfortable1.c3d
+Accept: application/json

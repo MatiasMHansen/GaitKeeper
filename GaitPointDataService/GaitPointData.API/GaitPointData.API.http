@@ -1,0 +1,9 @@
+@GaitPointData.API_HostAddress = http://localhost:5205
+
+### Test Subject Service (Root Endpoint)
+GET {{GaitPointData.API_HostAddress}}/
+Accept: application/json
+
+### Get Raw PointData (c3d filer: "221010 ID6_S119.c3d", "Run_Comfortable1.c3d" eller "Walk_Comfortable1.c3d" )
+GET {{GaitSession_API_HostAddress}}/Pointdata/raw/Walk_Comfortable1.c3d
+Accept: application/json
