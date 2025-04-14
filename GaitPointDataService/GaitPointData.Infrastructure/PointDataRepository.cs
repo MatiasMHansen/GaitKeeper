@@ -1,8 +1,8 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
 using GaitPointData.Application;
+using GaitPointData.Application.Query.QueryDTOs;
 using GaitPointData.Domain.Aggregate;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,20 +11,20 @@ using System.Text.Json;
 
 namespace GaitPointData.Infrastructure
 {
-    public class PointDataStorage : IPointDataStorage
+    public class PointDataRepository : IPointDataRepository
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
-        private readonly ILogger<PointDataStorage> _log;
+        private readonly ILogger<PointDataRepository> _log;
 
-        public PointDataStorage(IAmazonS3 s3Client, IOptions<MinioOptions> options, ILogger<PointDataStorage> logger)
+        public PointDataRepository(IAmazonS3 s3Client, IOptions<MinioOptions> options, ILogger<PointDataRepository> logger)
         {
             _s3Client = s3Client;
             _bucketName = options.Value.Bucket;
             _log = logger;
         }
 
-        public async Task SaveAsync(PointData pointData)
+        async Task IPointDataRepository.SaveAsync(PointData pointData)
         {
             // 1. Lav filnavn (eks: "0c6e72d0.json")
             var key = $"{pointData.Id}.json";
@@ -57,19 +57,51 @@ namespace GaitPointData.Infrastructure
             catch (AmazonS3Exception ex)
             {
                 _log.LogError($"EXCEPTION - PointDataStorage: AmazonS3Exception while saving '{key}': {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 _log.LogError($"EXCEPTION - PointDataStorage: General exception while saving '{key}': {ex.Message}");
+                throw;
             }
         }
 
-        public Task<PointData> LoadAsync(Guid id)
+        async Task<QueryPointDataDTO> IPointDataRepository.LoadAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // 1. Konstruér nøgle baseret på ID
+            var key = $"{id}.json";
+
+            try
+            {
+                // 2. Hent objektet fra S3/MinIO
+                var response = await _s3Client.GetObjectAsync(_bucketName, key);
+
+                // 3. Læs stream-indholdet som tekst (JSON)
+                using var reader = new StreamReader(response.ResponseStream);
+                var json = await reader.ReadToEndAsync();
+
+                // 4. Deserialisér JSON til PointData-aggregate
+                var pointData = JsonSerializer.Deserialize<QueryPointDataDTO>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                // 5. Returnér objektet eller kast fejl hvis det mislykkes
+                return pointData ?? throw new Exception("Deserialization failed");
+            }
+            catch (AmazonS3Exception ex)
+            {
+                _log.LogError($"EXCEPTION - LoadAsync: AmazonS3Exception while loading '{key}': {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"EXCEPTION - LoadAsync: General error while loading '{key}': {ex.Message}");
+                throw;
+            }
         }
 
-        public async Task DeleteAsync(Guid id)
+        async Task IPointDataRepository.DeleteAsync(Guid id)
         {
             // 1. Generér filnavnet baseret på ID
             var key = $"{id}.json";
@@ -89,10 +121,12 @@ namespace GaitPointData.Infrastructure
             catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 _log.LogError($"EXCEPTION - PointDataStorage tried to delete '{key}', but it was not found.");
+                throw;
             }
             catch (Exception ex)
             {
                 _log.LogError($"EXCEPTION - PointDataStorage error deleting '{key}': {ex.Message}");
+                throw;
             }
         }
 

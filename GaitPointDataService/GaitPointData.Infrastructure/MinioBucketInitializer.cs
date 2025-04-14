@@ -21,7 +21,7 @@ namespace GaitPointData.Infrastructure
             _logger.LogInformation("Checking if MinIO bucket exists...");
 
             using var scope = _scopeFactory.CreateScope();
-            var storage = scope.ServiceProvider.GetRequiredService<IPointDataStorage>();
+            var storage = scope.ServiceProvider.GetRequiredService<IPointDataRepository>();
 
             await storage.EnsureBucketExistsAsync();
 

@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Command\Helpers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GaitPointData.Domain\GaitPointData.Domain.csproj" />
   </ItemGroup>
 

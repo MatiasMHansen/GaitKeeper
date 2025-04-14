@@ -36,10 +36,12 @@ namespace GaitSessionService.Infrastructure.Repository
                                                 sqlEx.Number == 2627))  // Violation of UNIQUE KEY constraint
             {
                 _log.LogWarning($"WARNING - GaitSession with PointDataId: {gaitSession.PointDataId} already exists. Ignore action.");
+                throw;
             }
             catch (Exception ex)
             {
                 _log.LogError($"EXCEPTION - GaitSession with PointDataId: {gaitSession.PointDataId} could not be created. {ex.Message}");
+                throw;
             }
         }
 
@@ -63,6 +65,7 @@ namespace GaitSessionService.Infrastructure.Repository
             catch (Exception ex)
             {
                 _log.LogError($"ERROR - GaitSession with PointDataId: {pointDataId} could not be deleted. {ex.Message}");
+                throw;
             }
         }
     }

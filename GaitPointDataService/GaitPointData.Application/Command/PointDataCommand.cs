@@ -1,4 +1,5 @@
 ﻿using GaitPointData.Application.Command.CommandDTOs;
+using GaitPointData.Application.ValueObjectDTOs;
 using GaitPointData.Domain.Aggregate;
 using GaitPointData.Domain.ValueObjects;
 
@@ -6,11 +7,11 @@ namespace GaitPointData.Application.Command
 {
     public class PointDataCommand : IPointDataCommand
     {
-        private readonly IPointDataStorage _storage;
+        private readonly IPointDataRepository _repo;
 
-        public PointDataCommand(IPointDataStorage storage)
+        public PointDataCommand(IPointDataRepository repository)
         {
-            _storage = storage;
+            _repo = repository;
         }
 
         public async Task CreateAsync(CreatePointDataDTO dto)
@@ -35,12 +36,12 @@ namespace GaitPointData.Application.Command
             );
 
             // Save:
-            await _storage.SaveAsync(pointData);
+            await _repo.SaveAsync(pointData);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            await _storage.DeleteAsync(id);
+            await _repo.DeleteAsync(id);
         }
 
         // ------------ Helper metoder -------------

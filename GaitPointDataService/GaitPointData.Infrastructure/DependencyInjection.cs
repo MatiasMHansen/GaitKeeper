@@ -11,7 +11,7 @@ namespace GaitPointData.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             // Service registration
-            services.AddScoped<IPointDataStorage, PointDataStorage>();
+            services.AddScoped<IPointDataRepository, PointDataRepository>();
             services.AddHostedService<MinioBucketInitializer>();
 
             // Konfiguration af Minio

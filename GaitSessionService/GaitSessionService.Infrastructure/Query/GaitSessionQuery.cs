@@ -14,7 +14,7 @@ namespace GaitSessionService.Infrastructure.Query
             _db = context;
         }
 
-        async Task<GaitSessionQueryDTO> IGaitSessionQuery.GetAsync(Guid pointDataId)
+        async Task<QueryGaitSessionDTO> IGaitSessionQuery.GetAsync(Guid pointDataId)
         {
             var gaitSession = await _db.GaitSessions
                 .AsNoTracking()
@@ -23,7 +23,7 @@ namespace GaitSessionService.Infrastructure.Query
             return gaitSession == null ? null : MapToDTO(gaitSession); // Ternary operation: "condition ? valueIfTrue : valueIfFalse;"
         }
 
-        async Task<List<GaitSessionQueryDTO>> IGaitSessionQuery.GetAllAsync()
+        async Task<List<QueryGaitSessionDTO>> IGaitSessionQuery.GetAllAsync()
         {
             var gaitSessions = await _db.GaitSessions
                 .AsNoTracking()
@@ -32,9 +32,9 @@ namespace GaitSessionService.Infrastructure.Query
             return gaitSessions.Select(MapToDTO).ToList();
         }
 
-        private GaitSessionQueryDTO MapToDTO(GaitSession gs)
+        private QueryGaitSessionDTO MapToDTO(GaitSession gs)
         {
-            return new GaitSessionQueryDTO
+            return new QueryGaitSessionDTO
             {
                 Id = gs.Id,
                 PointDataId = gs.PointDataId,

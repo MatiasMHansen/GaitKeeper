@@ -2,7 +2,7 @@
 
 namespace GaitPointData.Domain.Aggregate
 {
-    public class PointData
+    public class PointData // Root Aggregate
     {
         public Guid Id { get; private set; } // Bruger correlationId fra Orchestrator
         public string FileName { get; private set; }

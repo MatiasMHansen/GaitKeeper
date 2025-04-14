@@ -4,8 +4,8 @@ namespace GaitSessionService.Application.Query
 {
     public interface IGaitSessionQuery
     {
-        Task<GaitSessionQueryDTO> GetAsync(Guid pointDataId);
+        Task<QueryGaitSessionDTO> GetAsync(Guid pointDataId);
 
-        Task<List<GaitSessionQueryDTO>> GetAllAsync();
+        Task<List<QueryGaitSessionDTO>> GetAllAsync();
     }
 }

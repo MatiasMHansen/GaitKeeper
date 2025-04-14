@@ -1,4 +1,5 @@
 ﻿using GaitPointData.Application.Command;
+using GaitPointData.Application.Query;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GaitPointData.Application
@@ -9,6 +10,7 @@ namespace GaitPointData.Application
         {
             // Register application services here
             services.AddScoped<IPointDataCommand, PointDataCommand>();
+            services.AddScoped<IPartialPointDataQuery, PartialPointDataQuery>();
 
             return services;
         }

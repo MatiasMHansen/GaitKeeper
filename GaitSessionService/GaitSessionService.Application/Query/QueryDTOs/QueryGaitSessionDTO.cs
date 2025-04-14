@@ -1,7 +1,7 @@
 ﻿
 namespace GaitSessionService.Application.Query.QueryDTOs
 {
-    public class GaitSessionQueryDTO
+    public class QueryGaitSessionDTO
     {
         public Guid Id { get; set; }
         public Guid PointDataId { get; set; }

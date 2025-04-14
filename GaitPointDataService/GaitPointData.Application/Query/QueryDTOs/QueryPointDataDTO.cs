@@ -1,8 +1,8 @@
 ﻿using GaitPointData.Application.ValueObjectDTOs;
 
-namespace GaitPointData.Application.Command.CommandDTOs
+namespace GaitPointData.Application.Query.QueryDTOs
 {
-    public class CreatePointDataDTO // Root Aggregate - Identisk med 'Shared.DTOs.RawGaitData'
+    public class QueryPointDataDTO
     {
         public Guid Id { get; set; }
         public string FileName { get; set; }

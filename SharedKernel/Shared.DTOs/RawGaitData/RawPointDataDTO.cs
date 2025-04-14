@@ -19,7 +19,7 @@
         public List<GaitCycleDTO> RGaitCycles { get; set; }
     }
 
-    //public class GaitCycleDTO
+    //public class GaitCycleDTO --- Eksistere allerede i "RawGaitSessionDTO"
     //{
     //    public string Name { get; set; }
     //    public string Description { get; set; }
