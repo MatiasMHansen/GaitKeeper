@@ -34,7 +34,7 @@ namespace GaitPointData.Application.Query
                         var queryPointDataDTO = await _repo.LoadAsync(id);
                         if (queryPointDataDTO == null) return;
 
-                        var (startFrame, endFrame) = GetMiddleFrameRange(queryPointDataDTO.RGaitCycles, queryPointDataDTO.StartFrame);
+                        var (gaitCycle, startFrame, endFrame) = GetMiddleFrameRange(queryPointDataDTO.RGaitCycles, queryPointDataDTO.StartFrame);
                         var allMarkers = GetAllMarkers(queryPointDataDTO);
 
                         var filteredMarkers = new ConcurrentBag<MarkerDTO>(); // En trådsikker collection, flere tråde kan tilføjer elementer samtidig
@@ -68,9 +68,8 @@ namespace GaitPointData.Application.Query
                             FileName = queryPointDataDTO.FileName,
                             SubjectId = queryPointDataDTO.SubjectId,
                             PointFreq = queryPointDataDTO.PointFreq,
-                            StartFrame = queryPointDataDTO.StartFrame,
-                            EndFrame = queryPointDataDTO.EndFrame,
-                            TotalFrames = queryPointDataDTO.TotalFrames,
+                            Duration = gaitCycle.Duration,
+                            Number = gaitCycle.Number,
                             Markers = filteredMarkers.ToList()
                         };
 
@@ -103,7 +102,7 @@ namespace GaitPointData.Application.Query
                 .ToList();
         }
 
-        private static (int startFrame, int endFrame) GetMiddleFrameRange(List<GaitCycleDTO> gaitCycles, int sessionStartFrame)
+        private static (GaitCycleDTO gaitCycle, int startFrame, int endFrame) GetMiddleFrameRange(List<GaitCycleDTO> gaitCycles, int sessionStartFrame)
         {
             var midIndex = gaitCycles.Count / 2;
             var gaitCycle = gaitCycles.ElementAt(midIndex);
@@ -111,7 +110,7 @@ namespace GaitPointData.Application.Query
             var startFrame = gaitCycle.StartFrame - sessionStartFrame;
             var endFrame = gaitCycle.EndFrame - sessionStartFrame;
 
-            return (startFrame, endFrame);
+            return (gaitCycle, startFrame, endFrame);
         }
     }
 }

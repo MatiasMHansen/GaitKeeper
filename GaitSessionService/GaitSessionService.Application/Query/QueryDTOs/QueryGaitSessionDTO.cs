@@ -2,7 +2,8 @@
 namespace GaitSessionService.Application.Query.QueryDTOs
 {
     public class QueryGaitSessionDTO
-    {
+    {   // Skal synkroniseres med 'GaitSessionDTO' i 'DatasetService.Application.DTOs'
+
         public Guid Id { get; set; }
         public Guid PointDataId { get; set; }
 

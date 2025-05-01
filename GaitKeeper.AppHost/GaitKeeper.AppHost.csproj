@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorFrontend\GaitKeeper.WebAssembly\GaitKeeper.WebAssembly.csproj" />
+    <ProjectReference Include="..\DatasetService\DatasetService.API\DatasetService.API.csproj" />
     <ProjectReference Include="..\GaitDataOrchestratorService\GaitDataOrchestrator.API\GaitDataOrchestrator.API.csproj" />
     <ProjectReference Include="..\GaitPointDataService\GaitPointData.API\GaitPointData.API.csproj" />
     <ProjectReference Include="..\Gateway.API\Gateway.API.csproj" />

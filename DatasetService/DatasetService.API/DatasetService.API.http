@@ -1,0 +1,6 @@
+@DatasetService.API_HostAddress = http://localhost:5148
+
+GET {{DatasetService.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

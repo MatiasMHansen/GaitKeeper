@@ -1,0 +1,12 @@
+﻿using DatasetService.Application.Query.QueryDTOs;
+using DatasetService.Application.Utility.UtilDTOs;
+using DatasetService.Domain.Entities;
+
+namespace DatasetService.Application.Utility
+{
+    public interface IExportDataset
+    {
+        Task PrintCharacteristicToCSV(Guid id);
+        Task PrintMarkerToCSV(QueryDatasetDTO dataset, List<PartialPointDataDTO> pointData, string markerLabel, char axis);
+    }
+}

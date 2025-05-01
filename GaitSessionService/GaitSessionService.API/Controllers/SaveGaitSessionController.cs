@@ -3,7 +3,6 @@ using Dapr.Client;
 using GaitSessionService.Application.Command;
 using GaitSessionService.Application.Command.CommandDTOs;
 using Microsoft.AspNetCore.Mvc;
-using OpenTelemetry;
 using Shared.DTOs.PubSubDTOs;
 
 namespace GaitSessionService.API.Controllers

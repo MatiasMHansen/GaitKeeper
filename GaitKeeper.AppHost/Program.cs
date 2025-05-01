@@ -16,7 +16,8 @@ var sqlPassword = builder.AddParameter("sql-password", secret: true);
 var sqlServer = builder.AddSqlServer("GaitkeeperSql", password: sqlPassword)
     .WithDataVolume();
 
-var sqlDatebase = sqlServer.AddDatabase("GaitkeeperDB");
+var sessionDb = sqlServer.AddDatabase("GaitSessionDB");
+var datasetDb = sqlServer.AddDatabase("GaitDatasetDB");
 
 builder.AddProject<Projects.Gateway_API>("gateway-api")
     .WithDaprSidecar(new DaprSidecarOptions
@@ -27,13 +28,13 @@ builder.AddProject<Projects.Gateway_API>("gateway-api")
     .WaitFor(minio);
 
 builder.AddProject<Projects.GaitSessionService_API>("gaitsession-api")
-    .WithReference(sqlDatebase)
+    .WithReference(sessionDb)
     .WithDaprSidecar(new DaprSidecarOptions 
     { 
         AppId = "gaitsessionservice",
         DaprHttpPort = 3501
     })
-    .WaitFor(sqlServer)
+    .WaitFor(sessionDb)
     .WaitFor(minio);
 
 builder.AddProject<Projects.GaitPointData_API>("gaitpointdata-api")
@@ -52,6 +53,16 @@ builder.AddProject<Projects.GaitDataOrchestrator_API>("gaitdataorchestrator-api"
     })
     .WaitFor(minio);
 
+builder.AddProject<Projects.DatasetService_API>("datasetservice-api")
+    .WithReference(datasetDb)
+    .WithDaprSidecar(new DaprSidecarOptions
+    {
+        AppId = "datasetservice",
+        DaprHttpPort = 3504
+    })
+    .WaitFor(datasetDb)
+    .WaitFor(minio);
+
 #pragma warning disable ASPIREHOSTINGPYTHON001
 var pythonApp = builder.AddPythonApp(
     name: "pythonc3dreader",
@@ -64,7 +75,7 @@ var pythonApp = builder.AddPythonApp(
 .WithDaprSidecar(new DaprSidecarOptions
 {
     AppId = "c3dreader",
-    DaprHttpPort = 3504
+    DaprHttpPort = 3505
 })
 .WaitFor(minio);
 

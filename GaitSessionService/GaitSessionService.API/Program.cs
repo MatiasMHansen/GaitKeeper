@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddSqlServerDbContext<GaitSessionContext>("GaitkeeperDB"); // Skal muligvis være før "AddServiceDefaults"
+builder.AddSqlServerDbContext<GaitSessionContext>("GaitSessionDB"); // Skal muligvis være før "AddServiceDefaults"
 
 builder.AddServiceDefaults();
 

@@ -2,8 +2,9 @@
 
 namespace GaitPointData.Application.Command.CommandDTOs
 {
-    public class CreatePointDataDTO // Root Aggregate - Identisk med 'Shared.DTOs.RawGaitData'
-    {
+    public class CreatePointDataDTO // Root Aggregate
+    {   // Skal synkroniseres med 'RawPointData' i 'Shared.DTOs.RawGaitData'
+       
         public Guid Id { get; set; }
         public string FileName { get; set; }
         public string SubjectId { get; set; }

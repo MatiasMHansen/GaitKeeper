@@ -1,6 +1,6 @@
-﻿using GaitPointData.API.DTO_s.Requests;
-using GaitPointData.Application.Query;
+﻿using GaitPointData.Application.Query;
 using Microsoft.AspNetCore.Mvc;
+using GaitPointData.API.DTOs;
 
 namespace GaitPointData.API.Controllers
 {

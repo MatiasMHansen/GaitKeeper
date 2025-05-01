@@ -52,6 +52,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaitSessionService.API", "GaitSessionService\GaitSessionService.API\GaitSessionService.API.csproj", "{9DB786B2-B353-1B30-A36A-1C56409A6260}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatasetService", "DatasetService", "{74EC9DC0-CB7C-4AA8-9DEA-7BD059CC0664}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatasetService.API", "DatasetService\DatasetService.API\DatasetService.API.csproj", "{F7F8A5C1-AA83-3737-665D-52C4078CB813}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatasetService.Application", "DatasetService\DatasetService.Application\DatasetService.Application.csproj", "{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatasetService.Domain", "DatasetService\DatasetService.Domain\DatasetService.Domain.csproj", "{E2CFEF36-10B6-4ADB-8A81-9F779B59E102}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatasetService.Infrastructure", "DatasetService\DatasetService.Infrastructure\DatasetService.Infrastructure.csproj", "{7618E2E1-E9E8-4E5C-8947-305E332ACC2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +126,22 @@ Global
 		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB786B2-B353-1B30-A36A-1C56409A6260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F8A5C1-AA83-3737-665D-52C4078CB813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F8A5C1-AA83-3737-665D-52C4078CB813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F8A5C1-AA83-3737-665D-52C4078CB813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F8A5C1-AA83-3737-665D-52C4078CB813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2CFEF36-10B6-4ADB-8A81-9F779B59E102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2CFEF36-10B6-4ADB-8A81-9F779B59E102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2CFEF36-10B6-4ADB-8A81-9F779B59E102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CFEF36-10B6-4ADB-8A81-9F779B59E102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7618E2E1-E9E8-4E5C-8947-305E332ACC2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7618E2E1-E9E8-4E5C-8947-305E332ACC2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7618E2E1-E9E8-4E5C-8947-305E332ACC2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7618E2E1-E9E8-4E5C-8947-305E332ACC2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +161,10 @@ Global
 		{CDB8C502-6AA1-4342-BD44-1B5B32873568} = {482957CB-6AFE-4A3C-BAA4-2B766F0343C3}
 		{7BFA7DD4-9E59-F41A-82C2-3FF3F6A72406} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
 		{9DB786B2-B353-1B30-A36A-1C56409A6260} = {C1BF999E-1FE2-4B8C-BAB6-2ED7179A5645}
+		{F7F8A5C1-AA83-3737-665D-52C4078CB813} = {74EC9DC0-CB7C-4AA8-9DEA-7BD059CC0664}
+		{B7FC94F2-B1B6-4227-9284-3E5FFE6982A3} = {74EC9DC0-CB7C-4AA8-9DEA-7BD059CC0664}
+		{E2CFEF36-10B6-4ADB-8A81-9F779B59E102} = {74EC9DC0-CB7C-4AA8-9DEA-7BD059CC0664}
+		{7618E2E1-E9E8-4E5C-8947-305E332ACC2B} = {74EC9DC0-CB7C-4AA8-9DEA-7BD059CC0664}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BDD8726-2145-41C1-9AFD-38417F8999E8}

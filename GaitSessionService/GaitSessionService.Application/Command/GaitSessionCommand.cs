@@ -54,7 +54,7 @@ namespace GaitSessionService.Application.Command
             await _repo.DeleteAsync(pointDataId);
         }
 
-        // ------------ Helper metoder -------------
+        // ------------ Helper metods -------------
         private Biometrics MapBiometrics(BiometricsDTO dto)
         {
             return Biometrics.Create(
