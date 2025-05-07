@@ -1,0 +1,248 @@
+﻿@page "/dataset/{id:guid}"
+@layout MainLayoutWithoutNav
+@inject DatasetServices DatasetService
+@inject GaitPointDataService GaitPointDataService
+@inject IJSRuntime JS
+
+<PageTitle>My dataset</PageTitle>
+
+@if (_dataset == null)
+{
+    <p><em>Loading dataset...</em></p>
+}
+else
+{
+    // Display dataset information
+    <h4>@_dataset.Name</h4>
+    <p><strong>Subjects:</strong> @_dataset.NumberOfSubjects</p>
+
+    // Display Deskriptive statistics
+    <h5>Population characteristics</h5>
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mean</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>StdDev</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var variable in _dataset.ContinuousDataSummery)
+            {
+                <tr>
+                    <td>@variable.Name</td>
+                    <td>@variable.Mean</td>
+                    <td>@variable.Median</td>
+                    <td>@variable.Min</td>
+                    <td>@variable.Max</td>
+                    <td>@variable.StdDev</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    // Add buttons
+    <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-outline-primary" @onclick="PrintCharacteristics">
+            Download Characteristics
+        </button>
+
+        <button class="btn btn-outline-secondary" @onclick="ShowSubjects">
+            Inspect Subjects
+        </button>
+    </div>
+
+    // Visual separation
+    <hr class="dashed-divider my-4" />
+
+    // Add buttons for Marker & Axis selection
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <button class="btn btn-outline-info" @onclick="ShowLabelSelector">Choose marker</button>
+        <input type="text" class="form-control" style="width: 200px;" value="@_selectedLabel" readonly />
+        <select class="form-select" style="width: 80px;" @bind="_selectedAxis">
+            <option value="">Axis</option>
+            <option value="X">X</option>
+            <option value="Y">Y</option>
+            <option value="Z">Z</option>
+        </select>
+
+        @if (!string.IsNullOrWhiteSpace(_selectedLabel) && !string.IsNullOrWhiteSpace(_selectedAxis))
+        {
+            <button class="btn btn-outline-primary" @onclick="FetchMarkerAxisData">
+                Preview marker data
+            </button>
+        }
+    </div>
+
+    // Display gait data graph
+
+
+    // Modal for displaying subjects -> Button: "Inspect Subjects"
+    @if (_showSubjectModal)
+    {
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Subjects</h5>
+                        <button type="button" class="btn-close" @onclick="() => _showSubjectModal = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Subject ID</th>
+                                    <th>Description</th>
+                                    <th>Sex</th>
+                                    <th>Age</th>
+                                    <th>Height</th>
+                                    <th>Weight</th>
+                                    <th>LLegLength</th>
+                                    <th>RLegLength</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var subject in _dataset.Subjects)
+                                {
+                                    <tr>
+                                        <td>@subject.SubjectId</td>
+                                        <td>@subject.Description</td>
+                                        <td>@subject.Sex</td>
+                                        <td>@subject.Age</td>
+                                        <td>@subject.Height</td>
+                                        <td>@subject.Weight</td>
+                                        <td>@subject.LLegLength</td>
+                                        <td>@subject.RLegLength</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="() => _showSubjectModal = false">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    // Modal for displaying labels -> Button: "Choose marker"
+    @if (_showLabelSelectorModal && _labelCategories is not null)
+    {
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Select a Marker Label</h5>
+                        <button type="button" class="btn-close" @onclick="() => _showLabelSelectorModal = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        @foreach (var category in GetLabelCategoryGroups())
+                        {
+                            <div class="mb-3">
+                                <strong>@category.Name</strong>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    @foreach (var label in category.Labels)
+                                    {
+                                        <button class="btn btn-sm @(_selectedLabel == label ? "btn-primary" : "btn-outline-primary")"
+                                        @onclick="@(() => SelectLabel(label))">
+                                            @label
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <span class="me-auto"><strong>Selected:</strong> @_selectedLabel</span>
+                        <button class="btn btn-secondary" @onclick="() => _showLabelSelectorModal = false">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private QueryDatasetDTO? _dataset;
+    private bool _showSubjectModal = false;
+    private bool _showLabelSelectorModal = false;
+    private LabelCategories? _labelCategories;
+    private string _selectedLabel = string.Empty;
+    private string _selectedAxis = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _dataset = await DatasetService.GetOneDatasetAsync(Id);
+        if (_dataset?.AllLabels is not null)
+        {
+            LabelCatagorization(_dataset.AllLabels);
+        }
+    }
+
+    // ------------------------------ Graf -------------------------------------
+    private List<QueryPartialPointDataDTO>? _gaitData = null;
+
+    private async Task FetchMarkerAxisData()
+    {
+        var pointDataIds = _dataset?.Subjects.Select(s => s.PointDataId).ToList() ?? new();
+        _gaitData = await GaitPointDataService.GetPartialPointDataAsync(pointDataIds, _selectedLabel);
+    }
+
+    private void ConfigureLineConfig()
+    {
+    }
+    // ----------------------------------------------------------------------------
+    
+    private void ShowSubjects()
+    {
+        _showSubjectModal = true;
+    }
+
+    private void PrintCharacteristics()
+    {
+        var url = DatasetService.GetCharacteristicsDownloadUrl(Id);
+        JS.InvokeVoidAsync("open", url, "_blank");
+    }
+
+    private void LabelCatagorization(List<string> labels)
+    {
+        _labelCategories = Utils.SeparateLabels(labels);
+    }
+
+    private void ShowLabelSelector()
+    {
+        _showLabelSelectorModal = true;
+    }
+
+    private void SelectLabel(string label)
+    {
+        _selectedLabel = label;
+    }
+
+    private IEnumerable<(string Name, List<string> Labels)> GetLabelCategoryGroups()
+    {
+        if (_labelCategories is null) yield break;
+
+        yield return ("Angles", _labelCategories.AngleLabels);
+        yield return ("Moments", _labelCategories.MomentLabels);
+        yield return ("Powers", _labelCategories.PowerLabels);
+        yield return ("Forces", _labelCategories.ForceLabels);
+        yield return ("Modeled", _labelCategories.ModeledLabels);
+        yield return ("Points", _labelCategories.PointLabels);
+    }
+
+    private void PrintMarkerAxisData()
+    {
+        // TODO: Print marker axis data... kommer senere...
+        Console.WriteLine($"Previewing: {_selectedLabel} - {_selectedAxis}");
+    }
+}

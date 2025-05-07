@@ -1,4 +1,5 @@
 using GaitKeeper.WebAssembly;
+using GaitKeeper.WebAssembly.Helpers;
 using GaitKeeper.WebAssembly.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -11,6 +12,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // Konfigurer HttpClient til at pege på din Gateway
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7019/") }); // Gateway Uri 
 
-builder.Services.AddScoped<SaveGaitDataService>();
+builder.Services.AddScoped<DatasetServices>();
+builder.Services.AddScoped<GaitPointDataService>();
+builder.Services.AddScoped<Utils>();
 
 await builder.Build().RunAsync();

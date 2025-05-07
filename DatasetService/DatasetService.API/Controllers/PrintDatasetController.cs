@@ -6,6 +6,7 @@ using DatasetService.Application.Query;
 using DatasetService.Application.Utility;
 using DatasetService.Application.Utility.UtilDTOs;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace DatasetService.API.Controllers
 {
@@ -27,11 +28,14 @@ namespace DatasetService.API.Controllers
         [HttpGet("characteristics/{id:guid}")]
         public async Task<IActionResult> PrintCharacteristicsToCSV(Guid id)
         {
-            //Print til CSV:
-            await _export.PrintCharacteristicToCSV(id);
+            var csvContent = await _export.PrintCharacteristicToCSV(id);
+            var bytes = Encoding.UTF8.GetBytes(csvContent);
+            var dataset = await _query.GetAsync(id);
+            var fileName = $"Characteristics_{dataset.Name}.csv";
 
-            return Ok("CSV file created successfully.");
+            return File(bytes, "text/csv", fileName);
         }
+
 
         [HttpPost("marker-axis")]
         public async Task<IActionResult> PrintMarkerAxisToCSV([FromBody] PrintMarkerAxisRequest request)

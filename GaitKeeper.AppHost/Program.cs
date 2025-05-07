@@ -3,6 +3,8 @@ using CommunityToolkit.Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+
+
 var minio = builder.AddContainer("minio", "minio/minio", "latest")
     .WithEnvironment("MINIO_ACCESS_KEY", "admin")
     .WithEnvironment("MINIO_SECRET_KEY", "adminadmin")
@@ -78,6 +80,9 @@ var pythonApp = builder.AddPythonApp(
     DaprHttpPort = 3505
 })
 .WaitFor(minio);
+
+// Frontend - Blazor WebAssembly
+builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-client");
 
 // Sæt debug-mode, hvis app’en kører i udvikling
 if (builder.ExecutionContext.IsRunMode && builder.Environment.IsDevelopment())

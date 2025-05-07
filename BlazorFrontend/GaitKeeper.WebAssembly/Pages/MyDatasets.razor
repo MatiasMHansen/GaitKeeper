@@ -1,0 +1,81 @@
+﻿@page "/"
+@using GaitKeeper.WebAssembly.Services
+@using GaitKeeper.WebAssembly.Models
+@inject DatasetServices DatasetService
+
+<PageTitle>My datasets</PageTitle>
+<h1>Welcome to GaitKeeper!</h1>
+<p>Below you can find datasets you've stored.</p>
+
+@if (datasets == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!datasets.Any())
+{
+    <p>No datasets found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Number of Subjects</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dataset in datasets)
+            {
+                <tr class="@(selectedDataset == dataset ? "table-primary" : "")"
+                    style="cursor: pointer"
+                    @onclick="@(() => SelectDataset(dataset))"
+                    @ondblclick="@(() => OpenDatasetInNewTab(dataset))">
+                    <td>@dataset.Name</td>
+                    <td>@dataset.NumberOfSubjects</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (selectedDataset != null)
+    {
+        <button class="btn btn-primary" @onclick="NavigateToDataset" target="_blank">
+            Select
+        </button>
+    }
+}
+
+
+@code {
+    private List<QueryPreviewDatasetDTO>? datasets;
+    private QueryPreviewDatasetDTO? selectedDataset;
+
+    protected override async Task OnInitializedAsync()
+    {
+        datasets = await DatasetService.GetAllDatasetsAsync();
+    }
+
+    private void SelectDataset(QueryPreviewDatasetDTO dataset)
+    {
+        selectedDataset = dataset;
+    }
+
+    private void OpenDatasetInNewTab(QueryPreviewDatasetDTO dataset)
+    {
+        var url = $"/dataset/{dataset.Id}";
+        JS.InvokeVoidAsync("open", url, "_blank");
+    }
+
+    private void NavigateToDataset()
+    {
+        if (selectedDataset != null)
+        {
+            var id = selectedDataset.Id;
+            var url = $"/dataset/{id}";
+            JS.InvokeVoidAsync("open", url, "_blank");
+        }
+    }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+}

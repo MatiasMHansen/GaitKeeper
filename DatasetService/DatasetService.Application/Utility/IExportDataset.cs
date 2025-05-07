@@ -6,7 +6,7 @@ namespace DatasetService.Application.Utility
 {
     public interface IExportDataset
     {
-        Task PrintCharacteristicToCSV(Guid id);
+        Task<string> PrintCharacteristicToCSV(Guid id);
         Task PrintMarkerToCSV(QueryDatasetDTO dataset, List<PartialPointDataDTO> pointData, string markerLabel, char axis);
     }
 }
