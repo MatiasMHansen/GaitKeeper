@@ -1,8 +1,173 @@
 ﻿@page "/browse"
+@inject GaitSessionService GaitSessionService
 
 <PageTitle>Browse</PageTitle>
-<h1>Browse the database and create your own dataset</h1>
+
+<h2>Browse the database</h2>
+<div class="mb-4">
+    <h5>& create your own dataset</h5>
+</div>
+
+<div class="row mb-3 align-items-center">
+    <div class="col-md-6 d-flex align-items-center">
+        <button class="btn btn-outline-info me-2" @onclick="() => showFilterModal = true">Filter</button>
+        <button class="btn btn-outline-secondary me-2" @onclick="LoadSessions">Search</button>
+        <div class="m-2">
+            <strong>Subjects found: @foundSubjectsCount</strong>
+        </div>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end pe-5">
+        <strong>Total subjects selected: @selectedSubjectsCount</strong>
+    </div>
+</div>
+
+<div class="row gx-2">
+    <!-- Venstre tabel -->
+    <div class="col-md-5">
+        <div class="border p-2" style="height: 700px; overflow-y: auto;">
+            @if (filteredSessions is not null && filteredSessions.Any())
+            {
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Subject Id</th>
+                            <th>Description</th>
+                            <th>Height (mm)</th>
+                            <th>Weight (kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var session in filteredSessions.Select((value, index) => new { value, index }))
+                        {
+                            <tr>
+                                <td>@(session.index + 1)</td>
+                                <td>@(session.value.SubjectId)</td>
+                                <td>@session.value.Description</td>
+                                <td>@session.value.Biometrics.Height</td>
+                                <td>@session.value.Biometrics.Weight</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted text-center mt-5">No gait sessions match the current filter.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Midterknapper -->
+    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center gap-2">
+        <button class="btn btn-outline-success">&gt;</button>
+        <button class="btn btn-outline-danger">&lt;</button>
+    </div>
+
+    <!-- Højre tabel -->
+    <div class="col-md-5">
+        <div class="border p-2" style="height: 600px; overflow-y: auto;">
+            <p class="text-muted text-center mt-5">
+                <!-- Fremvis evt. data her senere -->
+                Selected gait sessions vises her...
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3 d-flex justify-content-end">
+    <button class="btn btn-primary me-2">Create Dataset</button>
+    <button class="btn btn-outline-danger">Clear</button>
+</div>
+
+@if (showFilterModal)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filter Options</h5>
+                    <button type="button" class="btn-close" @onclick="() => showFilterModal = false"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <select class="form-select" @bind="filterDescription">
+                            <option>All</option>
+                            <option>Walk</option>
+                            <option>Run</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Age Range</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" class="form-control" placeholder="Min" @bind="filterAgeMin" min="0" />
+                            <input type="number" class="form-control" placeholder="Max" @bind="filterAgeMax" min="0" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Min Point Frequency</label>
+                        <input type="number" class="form-control" @bind="filterMinPointFreq" min="0" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="() => showFilterModal = false">Cancel</button>
+                    <button class="btn btn-primary" @onclick="FiltherModalClose">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private List<QueryGaitSessionDTO> allSessions;
+    private List<QueryGaitSessionDTO> filteredSessions;
+    private List<QueryGaitSessionDTO> selectedSessions;
+    private HashSet<Guid> selectedIds = new();
+    private int foundSubjectsCount => filteredSessions?.Count ?? 0;
+    private int selectedSubjectsCount => selectedSessions?.Count ?? 0;
+    private bool showFilterModal = false;
+    private string filterDescription = "All";
+    private int filterAgeMin = 0;
+    private int filterAgeMax = 100;
+    private int filterMinPointFreq = 0;
 
+    private async Task LoadSessions()
+    {
+        allSessions = await GaitSessionService.GetAllGaitSessionsAsync();
+
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        if (allSessions == null)
+        {
+            filteredSessions = new List<QueryGaitSessionDTO>();
+            return;
+        }
+
+        filteredSessions = allSessions
+            .Where(session =>
+            // Description: match contains (case-insensitive) unless "All"
+            (filterDescription == "All" ||
+             session.Description?.ToLowerInvariant().Contains(filterDescription.ToLowerInvariant()) == true) &&
+
+                // Age between min and max
+                session.Age >= filterAgeMin &&
+                session.Age <= filterAgeMax &&
+
+                // PointFreq above minimum
+                session.PointFreq >= filterMinPointFreq
+            )
+            .ToList();
+    }
+
+    private void FiltherModalClose()
+    {
+        showFilterModal = false;
+    }
 }

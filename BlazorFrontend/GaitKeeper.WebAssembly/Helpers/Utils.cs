@@ -1,4 +1,6 @@
 ﻿using GaitKeeper.WebAssembly.Models;
+using Shared.DTOs;
+using Shared.DTOs.RawGaitData;
 
 namespace GaitKeeper.WebAssembly.Helpers
 {
@@ -36,6 +38,41 @@ namespace GaitKeeper.WebAssembly.Helpers
             }
 
             return categories;
+        }
+
+        public static CreateGaitSessionDTO RawGaitDataToSaveGaitDataDTO(RawGaitSessionDTO raw, string description, string sex, int age)
+        {
+            var createDto = new CreateGaitSessionDTO
+            {
+                // Brugerdefinerede felter
+                Description = description,
+                Sex = sex,
+                Age = age,
+
+                // Raw data fra Python
+                FileName = raw.FileName,
+                SubjectId = raw.SubjectId,
+                PointFreq = raw.PointFreq,
+                AnalogFreq = raw.AnalogFreq,
+                StartFrame = raw.StartFrame,
+                EndFrame = raw.EndFrame,
+                TotalFrames = raw.TotalFrames,
+
+                AngleLabels = raw.AngleLabels,
+                ForceLabels = raw.ForceLabels,
+                ModeledLabels = raw.ModeledLabels,
+                MomentLabels = raw.MomentLabels,
+                PowerLabels = raw.PowerLabels,
+                PointLabels = raw.PointLabels,
+
+                Biometrics = raw.Biometrics,
+                SystemInfo = raw.SystemInfo,
+                LGaitCycles = raw.LGaitCycles,
+                RGaitCycles = raw.RGaitCycles,
+                GaitAnalyses = raw.GaitAnalyses
+            };
+
+            return createDto;
         }
     }
 }

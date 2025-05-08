@@ -14,6 +14,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 
 builder.Services.AddScoped<DatasetServices>();
 builder.Services.AddScoped<GaitPointDataService>();
+builder.Services.AddScoped<GaitSessionService>();
+builder.Services.AddScoped<GaitDataOrchestratorService>();
 builder.Services.AddScoped<Utils>();
 
 await builder.Build().RunAsync();

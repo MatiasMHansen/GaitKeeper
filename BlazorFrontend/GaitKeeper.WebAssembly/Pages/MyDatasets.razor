@@ -40,8 +40,12 @@ else
 
     @if (selectedDataset != null)
     {
-        <button class="btn btn-primary" @onclick="NavigateToDataset" target="_blank">
+        <button class="btn btn-primary me-2" @onclick="NavigateToDataset" target="_blank">
             Select
+        </button>
+
+        <button class="btn btn-danger" @onclick="ConfirmDelete">
+            Delete
         </button>
     }
 }
@@ -74,6 +78,23 @@ else
             var id = selectedDataset.Id;
             var url = $"/dataset/{id}";
             JS.InvokeVoidAsync("open", url, "_blank");
+        }
+    }
+
+    private async Task ConfirmDelete()
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to delete \"{selectedDataset?.Name}\"?");
+        if (confirmed)
+        {
+            await DeleteDataset();
+        }
+    }
+
+    private async Task DeleteDataset()
+    {
+        if (selectedDataset != null)
+        {
+            await JS.InvokeVoidAsync("alert", "not implemented yet.");
         }
     }
 

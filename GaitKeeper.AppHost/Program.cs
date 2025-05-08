@@ -82,7 +82,7 @@ var pythonApp = builder.AddPythonApp(
 .WaitFor(minio);
 
 // Frontend - Blazor WebAssembly
-builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-client");
+//builder.AddProject<Projects.GaitKeeper_WebAssembly>("gaitkeeper-client");
 
 // Sæt debug-mode, hvis app’en kører i udvikling
 if (builder.ExecutionContext.IsRunMode && builder.Environment.IsDevelopment())

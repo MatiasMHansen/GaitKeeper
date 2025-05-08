@@ -1,8 +1,321 @@
 ﻿@page "/upload"
+@using Shared.DTOs.RawGaitData
+@inject GaitSessionService GaitSessionService
+@inject GaitDataOrchestratorService GaitDataOrchestratorService
+@inject IJSRuntime JS
 
 <PageTitle>Upload</PageTitle>
-<h1>Upload your C3D files here</h1>
+
+<h2>Upload your own c3d files</h2>
+<p>Disclaimer! - Be aware that you data will be made public when you save it.</p>
+
+@* // File upload section - Debugger stops when choosing a file *@
+<div class="d-flex align-items-center">
+    <InputFile OnChange="HandleFileSelected" accept=".c3d" />
+    <span class="ms-1 text-muted">OBS! "Vælg fil" funktionen virker ikke, vælg istedet en eksisterende fil i viduet nedenfor.</span>
+</div>
+
+@* // Alternativ til at fremvis sidens funktionalitet *@
+<div class="mt-3">
+    <label for="presetSelect" class="form-label">Choose a existing file:</label>
+    <select id="presetSelect" class="form-select w-auto mb-3" @bind="_fileName">
+        <option disabled selected value="">-- Select option --</option>
+        <option value="Walk_Comfortable1.c3d">Walk_Comfortable1.c3d</option>
+        <option value="Walk_Comfortable2.c3d">Walk_Comfortable2.c3d</option>
+        <option value="Walk_Comfortable3.c3d">Walk_Comfortable3.c3d</option>
+        <option value="Walk_Comfortable4.c3d">Walk_Comfortable4.c3d</option>
+        <option value="Walk_Comfortable5.c3d">Walk_Comfortable5.c3d</option>
+        <option value="Run_Comfortable1.c3d">Run_Comfortable1.c3d</option>
+        <option value="Run_Comfortable2.c3d">Run_Comfortable2.c3d</option>
+        <option value="Run_Comfortable3.c3d">Run_Comfortable3.c3d</option>
+        <option value="Run_Comfortable4.c3d">Run_Comfortable4.c3d</option>
+        <option value="Run_Comfortable5.c3d">Run_Comfortable5.c3d</option>
+    </select>
+
+    @if (_fileName != null)
+    {
+        <button class="btn btn-primary me-2" @onclick="ConfirmUpload">Upload</button>
+        <button class="btn btn-secondary" @onclick="PreviewFile">Preview</button>
+    }
+</div>
+
+@* // Visual separation *@
+<hr class="dashed-divider my-4" />
+
+@* // display RawGaitSessionDTO *@
+@if (_previewData is not null)
+{
+    <h4>Filename: @_previewData.FileName</h4>
+    <div class="mb-1">
+        <h5>SubjectId: @_previewData.SubjectId</h5>
+    </div>
+    
+	// Collection of variables for the CreateGaitSessionDTO
+    <div class="row">
+        <div class="col-md-6 offset-md-0">
+            <h6><strong>Add mandatory variables</strong></h6>
+            <div class="row align-items-end">
+                <div class="col-md-5 mb-3">
+                    <label for="descriptionSelect" class="form-label">Description</label>
+                    <select id="descriptionSelect" class="form-select form-select-sm" @bind="description">
+                        <option disabled selected value="">-- Select --</option>
+                        <option>Walking</option>
+                        <option>Running</option>
+                    </select>
+                </div>
+
+                <div class="col-md-5 mb-3">
+                    <label for="sexSelect" class="form-label">Sex</label>
+                    <select id="sexSelect" class="form-select form-select-sm" @bind="sex">
+                        <option disabled selected value="">-- Select --</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label for="ageInput" class="form-label">Age</label>
+                    <input id="ageInput" type="number" class="form-control form-control-sm" @bind="age" min="1" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+	// Display of the preview data
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h6><strong>General Info</strong></h6>
+            <ul>
+                <li>Point Freq: @_previewData.PointFreq</li>
+                <li>Analog Freq: @_previewData.AnalogFreq</li>
+                <li>Start Frame: @_previewData.StartFrame</li>
+                <li>End Frame: @_previewData.EndFrame</li>
+                <li>Total Frames: @_previewData.TotalFrames</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h6><strong>System Info</strong></h6>
+            <ul>
+                <li>Software: @_previewData.SystemInfo?.Software</li>
+                <li>Version: @_previewData.SystemInfo?.Version</li>
+                <li>Marker Setup: @_previewData.SystemInfo?.MarkerSetup</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h6><strong>Biometrics</strong></h6>
+        <ul>
+            <li>Height: @_previewData.Biometrics?.Height mm</li>
+            <li>Weight: @_previewData.Biometrics?.Weight kg</li>
+            <li>LLegLength: @_previewData.Biometrics?.LLegLength mm</li>
+            <li>RLegLength: @_previewData.Biometrics?.RLegLength mm</li>
+        </ul>
+    </div>
+
+    // Buttons for Modal labels
+    <div class="mb-3">
+        <h6 class="fw-bold">Label Categories</h6>
+
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.AngleLabels, "Angle Labels"))">Angle Labels</button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.ForceLabels, "Force Labels"))">Force Labels</button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.ModeledLabels, "Modeled Labels"))">Modeled Labels</button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.MomentLabels, "Moment Labels"))">Moment Labels</button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.PowerLabels, "Power Labels"))">Power Labels</button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="@(() => OpenModal(_previewData.PointLabels, "Point Labels"))">Point Labels</button>
+    </div>
+
+	// 2 Tables for displaying gait cycles
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h6><strong>Left Gait Cycles</strong></h6>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cycle in _previewData.LGaitCycles ?? new())
+                    {
+                        <tr>
+                            <td>@cycle.Name</td>
+                            <td>@cycle.StartFrame</td>
+                            <td>@cycle.EndFrame</td>
+                            <td>@cycle.Duration</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <h6><strong>Right Gait Cycles</strong></h6>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cycle in _previewData.RGaitCycles ?? new())
+                    {
+                        <tr>
+                            <td>@cycle.Name</td>
+                            <td>@cycle.StartFrame</td>
+                            <td>@cycle.EndFrame</td>
+                            <td>@cycle.Duration</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+	// Gait Analysis section (if any)
+    @if (_previewData.GaitAnalyses is not null && _previewData.GaitAnalyses.Any())
+    {
+        <div>
+            <h6>Gait Analysis</h6>
+            <ul>
+                @foreach (var analysis in _previewData.GaitAnalyses)
+                {
+                    <li>
+                        <strong>@analysis.Name:</strong> @analysis.Value @analysis.UnitType
+                        <span class="text-muted">(@analysis.Description)</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="mb-2">
+        <button class="btn btn-primary me-2"
+                @onclick="SaveGaitData"
+                disabled="@IsSaveDisabled"
+                style="@GetSaveButtonStyle()">
+            Save Gait Session
+        </button>
+    </div>
+}
+
+@* // Modal for displaying labels *@
+@if (_activeLabelList != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@_activeLabelTitle</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        @foreach (var label in _activeLabelList)
+                        {
+                            <li class="list-group-item">@label</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private RawGaitSessionDTO _previewData;
+    private string? _fileName; 
+    private List<string>? _activeLabelList;
+    private string? _activeLabelTitle;
+    private bool IsSaveDisabled =>
+        string.IsNullOrWhiteSpace(sex) ||
+        string.IsNullOrWhiteSpace(description) ||
+        age < 1;
+    // Collecting data for the CreateGaitSessionDTO
+    private string sex;
+    private string description;
+    private int age; 
 
+    private string GetSaveButtonStyle()
+    {
+        return IsSaveDisabled ? "opacity: 0.5; cursor: not-allowed;" : "";
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file != null)
+        {
+            _fileName = file.Name;
+        }
+
+        try
+        {
+            var fileStream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            // ToDo - Call backend API to store the file
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error selecting file: " + ex.Message);
+        }
+    } 
+
+    private async Task ConfirmUpload()
+    {
+        if (_fileName == null)
+        {
+            await JS.InvokeVoidAsync("alert", "No file selected to upload.");
+            return;
+        }
+
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to upload '{_fileName}'?");
+        if (confirmed)
+        {
+            await JS.InvokeVoidAsync("alert", "Upload is not implemented yet.");
+            // Implement the upload logic here
+        }
+    }
+
+    private async Task PreviewFile()
+    {
+        if (_fileName == null)
+        {
+            await JS.InvokeVoidAsync("alert", "No file selected to preview.");
+            return;
+        }
+
+        _previewData = await GaitSessionService.GetRawGaitSessionAsync(_fileName);
+    }
+
+    private async Task SaveGaitData()
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to upload '{_fileName}' to the public database");
+        if (confirmed)
+        {
+            // Use Util for mapping:
+            var createDto = Utils.RawGaitDataToSaveGaitDataDTO(_previewData, description, sex, age);
+
+            // Call the service to save the data
+            await GaitDataOrchestratorService.SaveGaitDataAsync(createDto);
+        }
+    }
+
+    private void OpenModal(List<string> labels, string title)
+    {
+        _activeLabelList = labels;
+        _activeLabelTitle = title;
+    }
+
+    private void CloseModal()
+    {
+        _activeLabelList = null;
+        _activeLabelTitle = null;
+    }
 }
