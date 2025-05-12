@@ -35,5 +35,11 @@ namespace GaitKeeper.WebAssembly.Services
 
             throw new NotImplementedException("GetMarkerAxisDownloadUrl is not implemented yet.");
         }
+
+        public async Task SaveDatasetAsync(CreateDatasetRequest request)
+        {
+            var response = await _httpClient.PostAsJsonAsync("dataset/save", request);
+            // Brug response til at håndtere succes eller fejl
+        }
     }
 }

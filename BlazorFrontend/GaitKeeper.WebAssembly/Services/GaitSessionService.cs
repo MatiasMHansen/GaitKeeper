@@ -25,5 +25,5 @@ namespace GaitKeeper.WebAssembly.Services
             var response = await _httpClient.GetFromJsonAsync<List<QueryGaitSessionDTO>>("gaitsession/all");
             return response ?? new List<QueryGaitSessionDTO>();
         }
-    }   
+    }
 }
