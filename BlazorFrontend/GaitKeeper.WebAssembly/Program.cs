@@ -9,7 +9,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Konfigurer HttpClient til at pege på din Gateway
+// Konfigurer HttpClient til at pege på Gateway
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7019/") }); // Gateway Uri 
 
 builder.Services.AddScoped<DatasetServices>();
