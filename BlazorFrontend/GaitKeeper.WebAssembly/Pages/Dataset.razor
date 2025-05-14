@@ -1,4 +1,5 @@
 ﻿@page "/dataset/{id:guid}"
+@using ChartJs.Blazor.PieChart
 @layout MainLayoutWithoutNav
 @inject DatasetServices DatasetService
 @inject GaitPointDataService GaitPointDataService
@@ -68,18 +69,18 @@ else
             <option value="Y">Y</option>
             <option value="Z">Z</option>
         </select>
-
         @if (!string.IsNullOrWhiteSpace(_selectedLabel) && !string.IsNullOrWhiteSpace(_selectedAxis))
-        {
-            <button class="btn btn-outline-primary" @onclick="FetchMarkerAxisData">
-                Preview marker data
-            </button>
-        }
+        { <button class="btn btn-outline-primary" @onclick="FetchMarkerAxisData"> Preview marker data </button> }
+        @if (_gaitData != null)
+        { <button class="btn btn-outline-primary" @onclick="PrintMarkerData"> Download marker data</button> }
     </div>
 
     // Display gait data graph
-
-
+    @if (_lineConfig != null)
+    {
+        <Chart Config="@_lineConfig"></Chart>
+    }
+    
     // Modal for displaying subjects -> Button: "Inspect Subjects"
     @if (_showSubjectModal)
     {
@@ -186,19 +187,71 @@ else
         {
             LabelCatagorization(_dataset.AllLabels);
         }
+
     }
 
     // ------------------------------ Graf -------------------------------------
     private List<QueryPartialPointDataDTO>? _gaitData = null;
+    private LineConfig _lineConfig;
 
     private async Task FetchMarkerAxisData()
     {
         var pointDataIds = _dataset?.Subjects.Select(s => s.PointDataId).ToList() ?? new();
         _gaitData = await GaitPointDataService.GetPartialPointDataAsync(pointDataIds, _selectedLabel);
+
+        if (_gaitData != null && _gaitData.Count > 0)
+        { LineChartLoadData(); }
     }
 
-    private void ConfigureLineConfig()
+    private void LineChartLoadData()
     {
+        if (_lineConfig == null)
+        {
+            _lineConfig = new LineConfig();
+        }
+        else
+        {
+            _lineConfig.Data.Labels.Clear();
+            _lineConfig.Data.Datasets.Clear();
+        }
+
+        // Data - Labels
+        int frameCount = _gaitData[0].Markers[0].Units.Count;
+        for (int i = 1; i <= frameCount; i++)
+        {
+            _lineConfig.Data.Labels.Add(i.ToString());
+        }
+
+        // Data - Datasets
+        foreach (var session in _gaitData)
+        {
+            var units = session.Markers[0].Units;
+            List<double> values = new();
+
+            foreach (var unit in units)
+            {
+                values.Add(_selectedAxis switch
+                {
+                    "X" => (double)unit.X,
+                    "Y" => (double)unit.Y,
+                    "Z" => (double)unit.Z,
+                    _ => 0.0
+                });
+            }
+
+
+            var dataset = new LineDataset<double>()
+                {
+                    Label = session.SubjectId,
+                    Fill = false,
+                    BorderColor = ColorUtil.RandomColorString(),
+                    LineTension = 0.1,
+                    PointRadius = 0,
+                };
+
+            dataset.AddRange(values);
+            _lineConfig.Data.Datasets.Add(dataset);
+        }
     }
     // ----------------------------------------------------------------------------
     
@@ -211,6 +264,13 @@ else
     {
         var url = DatasetService.GetCharacteristicsDownloadUrl(Id);
         JS.InvokeVoidAsync("open", url, "_blank");
+    }
+
+    private async Task PrintMarkerData()
+    {
+        var (fileBytes, fileName) = await DatasetService.GetMarkerAxisFileAsync(Id, _gaitData[0].Markers[0].Label, _selectedAxis[0]);
+        await JS.InvokeVoidAsync("downloadFileFromBytes", fileName, fileBytes);
+
     }
 
     private void LabelCatagorization(List<string> labels)

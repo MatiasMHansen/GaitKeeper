@@ -55,7 +55,7 @@ namespace DatasetService.Application.Utility
             return sb.ToString();
         }
 
-        async Task IExportDataset.PrintMarkerToCSV(QueryDatasetDTO dataset, List<PartialPointDataDTO> pointData, string markerLabel, char axis)
+        async Task<string> IExportDataset.PrintMarkerToCSV(QueryDatasetDTO dataset, List<PartialPointDataDTO> pointData, string markerLabel, char axis)
         {
             var sb = new StringBuilder();
 
@@ -109,18 +109,7 @@ namespace DatasetService.Application.Utility
             }
 
 
-            // Gem CSV - !Skal ændres til at blive downloadet i browseren!
-            var baseDir = AppContext.BaseDirectory;
-            // Gå 4 niveauer op: bin → Debug → net9.0 → DatasetService.Application → DatasetService → GaitKeeper
-            var solutionRoot = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", ".."));
-            // Nu har du: D:\LokalRepos\GaitKeeper\
-            var exportDir = Path.Combine(solutionRoot, "export");
-            Directory.CreateDirectory(exportDir);
-
-            var fileName = $"{markerLabel}-{axis}_{dataset.Name}.csv";
-            var filePath = Path.Combine(exportDir, fileName);
-
-            await File.WriteAllTextAsync(filePath, sb.ToString());
+            return sb.ToString();
         }
     }
 }

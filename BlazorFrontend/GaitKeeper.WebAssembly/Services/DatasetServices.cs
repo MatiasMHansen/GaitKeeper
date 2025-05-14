@@ -29,11 +29,24 @@ namespace GaitKeeper.WebAssembly.Services
             return $"https://localhost:7019/dataset/print/characteristics/{id}"; // Url på Gateway
         }
 
-        public string GetMarkerAxisDownloadUrl(Guid id)
+        public async Task<(byte[] Content, string FileName)> GetMarkerAxisFileAsync(Guid datasetId, string markerLabel, char axis)
         {
-            //return $"https://localhost:7019/dataset/print/continuous/{id}"; // Url på Gateway
+            var request = new PrintMarkerAxisRequest
+            {
+                Id = datasetId,
+                MarkerLabel = markerLabel,
+                Axis = axis
+            };
 
-            throw new NotImplementedException("GetMarkerAxisDownloadUrl is not implemented yet.");
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7019/dataset/print/marker-axis", request);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Request failed: {response.StatusCode}");
+
+            var content = await response.Content.ReadAsByteArrayAsync();
+            var fileName = response.Content.Headers.ContentDisposition?.FileName?.Trim('"') ?? "download.csv";
+
+            return (content, fileName);
         }
 
         public async Task SaveDatasetAsync(CreateDatasetRequest request)

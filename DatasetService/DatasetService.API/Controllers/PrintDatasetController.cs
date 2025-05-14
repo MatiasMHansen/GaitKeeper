@@ -69,9 +69,13 @@ namespace DatasetService.API.Controllers
             }
 
             // Print til CSV:
-            await _export.PrintMarkerToCSV(dataset, pointData, request.MarkerLabel, request.Axis);
+            var csvContent = await _export.PrintMarkerToCSV(dataset, pointData, request.MarkerLabel, request.Axis);
 
-            return Ok("CSV file created successfully.");
+            // Returnér som file download:
+            var bytes = Encoding.UTF8.GetBytes(csvContent);
+            var fileName = $"MarkerData_{dataset.Name}_{request.MarkerLabel}_{request.Axis}.csv";
+
+            return File(bytes, "text/csv", fileName);
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿@page "/test"
+@using ChartJs.Blazor.Common.Axes
+@using ChartJs.Blazor.LineChart
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Util
+
+<h3>Line Chart test</h3>
+
+<Chart Config="lineConfig"></Chart>
+
+@code {
+    private LineConfig lineConfig;
+
+    protected override void OnInitialized()
+    {
+        lineConfig = new LineConfig
+        {
+            Options = new LineOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Eksempel biomekanisk ganganalyse data"
+                },
+                Scales = new Scales
+                {
+                    XAxes = new List<CartesianAxis>
+                    {
+                        new LinearCartesianAxis
+
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                Display = true,
+                                LabelString = "Tidsstempel (frames)"
+                            }
+                        }
+                    },
+                    YAxes = new List<CartesianAxis>
+                    {
+                        new LinearCartesianAxis
+
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                Display = true,
+                                LabelString = "Enheder (grader)"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Dummy test data (frames + vinkler)
+        foreach (var label in new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" })
+        {
+            lineConfig.Data.Labels.Add(label);
+        }
+
+        var dataset = new LineDataset<double>(new double[] { 0, 5, 10, 7, 5, 6, 8, 10, 12, 15 })
+        {
+            Label = "Knævinkel højre ben",
+            Fill = false,
+            BorderColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue),
+            LineTension = 0.1
+        };
+
+        lineConfig.Data.Datasets.Add(dataset);
+    }
+}
