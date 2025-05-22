@@ -29,7 +29,7 @@ namespace GaitDataOrchestrator.API.Controllers
                 if (gaitSessionDTO.FileName == null)
                     return BadRequest(new { error = "Invalid Gait Data request" });
 
-                // Orkestere processe med PubSub og RabbitMQ
+                // Orkestere processe med PubSub
                 var correlationId = Guid.NewGuid();
                 var message = new
                 {
@@ -39,9 +39,10 @@ namespace GaitDataOrchestrator.API.Controllers
 
                 gaitSessionDTO.PointDataId = correlationId;
 
-                // Publish til RabbitMQ via Dapr PubSub
+                // Publish til Message-broker via Dapr PubSub
                 await _daprClient.PublishEventAsync("pubsub", "save-gait-session", gaitSessionDTO);
                 await _daprClient.PublishEventAsync("pubsub", "save-point-data", message);
+
                 // await _daprClient.PublishEventAsync("pubsub", "save-analog-data", message); Ikke implementeret, endnu...
 
                 _log.LogInformation($"Success! All events for {gaitSessionDTO.FileName} have successfully been published -> Id:{correlationId}");
